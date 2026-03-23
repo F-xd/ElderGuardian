@@ -231,7 +231,6 @@ public class UserService implements IUserService {
         if (elderUser == null) {
             return ResponseMessage.error("用户不存在");
         }
-        elderUser.setFamilyIds(familyIds);
         // 处理旧家属
         Set<Long> oldFamilyIds = elderUser.getFamilyIds();
         if (oldFamilyIds != null && !oldFamilyIds.isEmpty()) {
@@ -261,6 +260,7 @@ public class UserService implements IUserService {
             familyUser.setElderIds(elderIds);
             userDao.save(familyUser);
         }
+        elderUser.setFamilyIds(familyIds);
         userDao.save(elderUser);
         return ResponseMessage.success(null, "绑定成功");
     }
@@ -269,25 +269,11 @@ public class UserService implements IUserService {
     public ResponseMessage<String> bindCaregiver(BindCaregiverReq req) {
         Long elderId = req.getElderId();
         Set<Long> caregiverIds = req.getCaregiverIds();
-        Long caregiverId = null;
-        if (caregiverIds != null && !caregiverIds.isEmpty()) {
-            caregiverId = caregiverIds.iterator().next();
-        }
         User elderUser = userDao.findById(elderId).orElse(null);
-        User caregiverUser = userDao.findById(caregiverId).orElse(null);
         if (elderUser == null) {
             return ResponseMessage.error("用户不存在");
         }
-        if (caregiverUser == null) {
-            return ResponseMessage.error("护理人员不存在");
-        }
-        Set<Long> elderIds = caregiverUser.getElderIds();
-        if (elderIds == null) {
-            elderIds = new HashSet<>();
-        }
-        elderIds.add(elderId);
-        caregiverUser.setElderIds(elderIds);
-
+        // 处理旧护理人员
         Set<Long> oldCaregiverIds = elderUser.getCaregiverIds();
         if (oldCaregiverIds != null && !oldCaregiverIds.isEmpty()) {
             User oldCaregiverUser = userDao.findById(oldCaregiverIds.iterator().next()).orElse(null);
@@ -298,8 +284,24 @@ public class UserService implements IUserService {
                 userDao.save(oldCaregiverUser);
             }
         }
+        // 绑定新护理人员
+        if (caregiverIds != null && !caregiverIds.isEmpty()) {
+            Long caregiverId = null;
+            caregiverId = caregiverIds.iterator().next();
+            User caregiverUser = userDao.findById(caregiverId).orElse(null);
+            if (caregiverUser == null) {
+                return ResponseMessage.error("护理人员不存在");
+            }
+            Set<Long> elderIds = caregiverUser.getElderIds();
+            if (elderIds == null) {
+                elderIds = new HashSet<>();
+            }
+            elderIds.add(elderId);
+            caregiverUser.setElderIds(elderIds);
+            userDao.save(caregiverUser);
+        }
+
         elderUser.setCaregiverIds(caregiverIds);
-        userDao.save(caregiverUser);
         userDao.save(elderUser);
         return ResponseMessage.success(null, "绑定成功");
     }
