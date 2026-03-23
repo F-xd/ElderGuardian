@@ -33,7 +33,7 @@ public class Room {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<User> users;
 
-    // 房间内的环境传感器数据列表（一对多关系）
+    // 房间内的环境传感器（一对一关系）
     @OneToOne()
     @JoinColumn(name = "device_id", unique = true)
     private Device device;

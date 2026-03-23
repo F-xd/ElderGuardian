@@ -20,7 +20,7 @@ public class RoomDTO {
     // 房间内的用户列表（一对多关系）
     private List<UserSummaryDTO> users;
 
-    // 房间内的环境传感器数据列表（一对多关系）
+    // 房间内的环境传感器（一对一关系）
     private DeviceSummaryDTO device;
 
     public RoomDTO() {
