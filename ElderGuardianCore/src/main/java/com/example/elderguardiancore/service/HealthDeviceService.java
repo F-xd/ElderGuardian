@@ -35,8 +35,12 @@ public class HealthDeviceService implements IHealthDeviceService {
         if (exists) {
             // 更新设备数据
             HealthDevice existingDevice = healthDeviceDao.findHealthDeviceByDeviceName(healthDevice.getDeviceName());
-            existingDevice.setHealthDeviceData(healthDevice);
+            // 比较时间字段，只有时间更新时才更新数据
+            if (existingDevice.getTime() < healthDevice.getTime()) {
+                existingDevice.setHealthDeviceData(healthDevice);
+            }
             device = healthDeviceDao.save(existingDevice);
+
         } else {
             // 添加设备
             device = healthDeviceDao.save(healthDevice);

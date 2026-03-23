@@ -32,7 +32,10 @@ public class DeviceService implements IDeviceService {
         if (exists) {
             // 更新设备数据
             Device existingDevice = deviceDao.findDeviceByDeviceName(device.getDeviceName());
-            existingDevice.setDeviceData(device);
+            // 比较时间字段，只有时间更新时才更新数据
+            if (existingDevice.getTime() < device.getTime()) {
+                existingDevice.setDeviceData(device);
+            }
             deviceId = deviceDao.save(existingDevice).getDeviceId();
         } else {
             // 添加设备
