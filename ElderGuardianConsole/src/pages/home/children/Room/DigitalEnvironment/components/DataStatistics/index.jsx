@@ -1,7 +1,7 @@
 import React from "react";
 import { Statistic, Flex, Card } from "antd";
 import CountUp from "react-countup";
-import { COLORS, GAP } from "../../../../../../constant";
+import { COLORS, GAP } from "@/constant";
 const formatter = (value) => <CountUp end={value} />;
 
 export default function DataStatistics(props) {

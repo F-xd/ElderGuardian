@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Content from "@/component/Content";
 import { Form, Space, Flex, Card, Statistic, Divider } from "antd";
-import DeviceSelect from "../../../../component/DeviceSelect";
-import { apiEnvironmentDataList } from "../../../../services/environmentDataApi";
+import DeviceSelect from "@/component/DeviceSelect";
+import { apiEnvironmentDataList } from "@/services/environmentDataApi";
 import ReactECharts from "echarts-for-react";
 import { buildOptions, initOptions } from "./constant";
-import CustomDatePicker from "../../../../component/CustomDatePicker";
+import CustomDatePicker from "@/component/CustomDatePicker";
 import DataStatistics from "./components/DataStatistics";
 
-export default function DataCenter() {
+export default function DigitalEnvironment() {
   const [form] = Form.useForm();
   const [options, setOptions] = useState({
     temperatureHumidityOptions: initOptions,

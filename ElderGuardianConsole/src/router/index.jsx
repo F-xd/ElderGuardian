@@ -21,7 +21,7 @@ import { filterRoutesByRole } from "../utils/permission";
 import RoomList from "../pages/home/children/Room/RommList";
 import RoomOccupancy from "../pages/home/children/Room/RoomOccupancy";
 import Device from "../pages/home/children/Device";
-import DataCenter from "../pages/home/children/DataCenter";
+import DigitalEnvironment from "../pages/home/children/Room/DigitalEnvironment";
 import DigitalHealth from "../pages/home/children/Elder/DigitalHealth";
 import ElderList from "../pages/home/children/Elder/ElderList";
 
@@ -32,14 +32,6 @@ export const publicMenuRoutes = [
     icon: <PieChartOutlined />,
     path: "",
     element: <Options />,
-  },
-  {
-    label: <NavLink to="/home/dataCenter">数据中心</NavLink>,
-    key: "dataCenter",
-    icon: <PieChartOutlined />,
-    path: "dataCenter",
-    element: <DataCenter />,
-    permission: ["admin"],
   },
   {
     label: <NavLink to="/home/device">设备中心</NavLink>,
@@ -61,6 +53,13 @@ export const publicMenuRoutes = [
         key: "roomList",
         path: "roomList",
         element: <RoomList />,
+      },
+      {
+        label: <NavLink to="/home/room/digitalEnvironment">数字环境</NavLink>,
+        key: "digitalEnvironment",
+        path: "digitalEnvironment",
+        element: <DigitalEnvironment />,
+        permission: ["admin"],
       },
       {
         label: <NavLink to="/home/room/roomOccupancy">入住管理</NavLink>,
