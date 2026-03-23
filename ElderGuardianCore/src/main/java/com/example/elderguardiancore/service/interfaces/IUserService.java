@@ -61,6 +61,14 @@ public interface IUserService {
     User editUser(User user);
 
     /**
+     * 一键解除用户所有绑定关系
+     * 
+     * @param user 用户对象
+     * @return 解除绑定后的用户对象
+     */
+    User unBindAll(User user);
+
+    /**
      * 删除用户
      * 
      * @param userId 用户ID

@@ -126,6 +126,7 @@ public class UserService implements IUserService {
             room = user.getRoom();
         }
 
+        unBindAll(user);
         // 调用 dao 层的方法删除用户
         userDao.deleteById(userId);
 
@@ -159,6 +160,7 @@ public class UserService implements IUserService {
                     roomsToUpdate.add(room);
                 }
             }
+            unBindAll(user);
         }
 
         // 调用 dao 层的方法批量删除用户
@@ -300,5 +302,87 @@ public class UserService implements IUserService {
         userDao.save(caregiverUser);
         userDao.save(elderUser);
         return ResponseMessage.success(null, "绑定成功");
+    }
+
+    @Override
+    public User unBindAll(User user) {
+        Role role = user.getRole();
+        switch (role) {
+            case ELDER: {
+                // 处理家属
+                Set<Long> familyIds = user.getFamilyIds();
+                if (familyIds != null && !familyIds.isEmpty()) {
+                    for (Long familyId : familyIds) {
+                        User familyUser = userDao.findById(familyId).orElse(null);
+                        if (familyUser != null) {
+                            Set<Long> elderIds = familyUser.getElderIds();
+                            if (elderIds != null) {
+                                elderIds.remove(user.getUserId());
+                                familyUser.setElderIds(elderIds);
+                                userDao.save(familyUser);
+                            }
+                        }
+                    }
+                }
+                // 处理护理人员
+                Set<Long> caregiverIds = user.getCaregiverIds();
+                if (caregiverIds != null && !caregiverIds.isEmpty()) {
+                    for (Long caregiverId : caregiverIds) {
+                        User caregiverUser = userDao.findById(caregiverId).orElse(null);
+                        if (caregiverUser != null) {
+                            Set<Long> elderIds = caregiverUser.getElderIds();
+                            if (elderIds != null) {
+                                elderIds.remove(user.getUserId());
+                                caregiverUser.setElderIds(elderIds);
+                                userDao.save(caregiverUser);
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            case FAMILY: {
+                // 处理老人
+                Set<Long> elderIds = user.getElderIds();
+                if (elderIds != null && !elderIds.isEmpty()) {
+                    for (Long elderId : elderIds) {
+                        User elderUser = userDao.findById(elderId).orElse(null);
+                        if (elderUser != null) {
+                            Set<Long> familyIds = elderUser.getFamilyIds();
+                            if (familyIds != null) {
+                                familyIds.remove(user.getUserId());
+                                elderUser.setFamilyIds(familyIds);
+                                userDao.save(elderUser);
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            case CAREGIVER: {
+                // 处理老人
+                Set<Long> elderIds = user.getElderIds();
+                if (elderIds != null && !elderIds.isEmpty()) {
+                    for (Long elderId : elderIds) {
+                        User elderUser = userDao.findById(elderId).orElse(null);
+                        if (elderUser != null) {
+                            Set<Long> caregiverIds = elderUser.getCaregiverIds();
+                            if (caregiverIds != null) {
+                                caregiverIds.remove(user.getUserId());
+                                elderUser.setCaregiverIds(caregiverIds);
+                                userDao.save(elderUser);
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
+        user.setFamilyIds(null);
+        user.setCaregiverIds(null);
+        user.setElderIds(null);
+        return user;
     }
 }
