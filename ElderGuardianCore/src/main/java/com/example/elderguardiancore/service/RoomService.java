@@ -142,7 +142,13 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public ResponseMessage<String> deleteBatch(List<Long> roomIds) {
+    public ResponseMessage<String> deleteBatch(Map<String, Object> requestBody) {
+        List<Long> roomIds = ((List<Integer>) requestBody.get("roomIds")).stream().map(obj -> {
+            return obj.longValue();
+        }).toList();
+        if (roomIds == null || roomIds.isEmpty()) {
+            return ResponseMessage.error("房间ID列表不能为空");
+        }
         // 检查是否有房间有人入住
         for (Long roomId : roomIds) {
             Room room = roomDao.findById(roomId).orElse(null);

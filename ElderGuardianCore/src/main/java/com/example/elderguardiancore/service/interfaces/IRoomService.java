@@ -45,7 +45,7 @@ public interface IRoomService {
      *
      * @param roomIds 房间ID列表
      */
-    ResponseMessage<String> deleteBatch(List<Long> roomIds);
+    ResponseMessage<String> deleteBatch(Map<String, Object> requestBody);
 
     /**
      * 房间入住（添加用户到房间）

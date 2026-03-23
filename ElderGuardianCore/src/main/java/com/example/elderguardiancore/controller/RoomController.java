@@ -47,12 +47,7 @@ public class RoomController {
     // 批量删除房间
     @PostMapping("/deleteBatch")
     public ResponseMessage<String> deleteBatch(@RequestBody Map<String, Object> requestBody) {
-        @SuppressWarnings("unchecked")
-        List<Long> roomIds = (List<Long>) requestBody.get("roomIds");
-        if (roomIds == null || roomIds.isEmpty()) {
-            return ResponseMessage.error("房间ID列表不能为空");
-        }
-        return roomService.deleteBatch(roomIds);
+        return roomService.deleteBatch(requestBody);
     }
 
     // 房间入住（添加用户到房间）
