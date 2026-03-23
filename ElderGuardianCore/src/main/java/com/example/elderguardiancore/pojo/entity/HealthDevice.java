@@ -108,6 +108,8 @@ public class HealthDevice {
     }
 
     public void setHealthDeviceData(HealthDevice healthDevice) {
+        // 更新时间字段
+        this.time = healthDevice.getTime();
         // 心率和血氧可能为空（为空时不更新）
         if (healthDevice.getHeartRate() != 0) {
             this.heartRate = healthDevice.getHeartRate();
