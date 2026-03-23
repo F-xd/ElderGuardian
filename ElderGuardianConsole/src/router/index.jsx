@@ -42,7 +42,7 @@ export const publicMenuRoutes = [
     permission: ["admin"],
   },
   {
-    label: <NavLink to="/home/device">环境设备</NavLink>,
+    label: <NavLink to="/home/device">设备中心</NavLink>,
     key: "device",
     icon: <AlertOutlined />,
     path: "device",

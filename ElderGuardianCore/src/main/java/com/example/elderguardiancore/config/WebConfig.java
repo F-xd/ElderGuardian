@@ -1,6 +1,5 @@
 package com.example.elderguardiancore.config;
 
-
 import com.example.elderguardiancore.interceptor.MyInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -15,12 +14,13 @@ public class WebConfig implements WebMvcConfigurer {
         MyInterceptor myInterceptor = new MyInterceptor();
         registry.addInterceptor(myInterceptor).addPathPatterns("/**");
     }
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("http://192.168.50.219:5173","http://192.168.50.84:5173/")  // 允许所有来源，生产环境建议指定具体域名
+                .allowedOriginPatterns("http://192.168.50.219:5173", "http://192.168.50.192:5173/") // 允许所有来源，生产环境建议指定具体域名
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true);  // 关键：允许携带凭据
+                .allowCredentials(true); // 关键：允许携带凭据
     }
 }

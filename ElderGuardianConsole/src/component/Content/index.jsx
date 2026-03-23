@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./index.module.less";
+import { Space } from "antd";
+import { GAP } from "../../constant";
 export default function Content(props) {
   const { title, children, extra } = props;
   return (
@@ -10,7 +12,13 @@ export default function Content(props) {
           {extra && <div>{extra}</div>}
         </div>
       )}
-      <div className={styles.children}>{children}</div>
+      <Space
+        size={GAP.MEDIUM}
+        orientation="vertical"
+        className={styles.children}
+      >
+        {children}
+      </Space>
     </div>
   );
 }
