@@ -27,3 +27,6 @@ export const apiBindFamily = (data) => post("/user/bindFamily", data);
 
 // 绑定护理人员
 export const apiBindCaregiver = (data) => post("/user/bindCaregiver", data);
+
+// 获取老人所有健康数据
+export const apiGetElderHealth = (data) => post("/user/health", data);

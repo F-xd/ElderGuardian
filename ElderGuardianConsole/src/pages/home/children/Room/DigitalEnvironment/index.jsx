@@ -47,7 +47,7 @@ export default function DigitalEnvironment() {
   }, []);
 
   return (
-    <Content title="数据中心">
+    <Content title="数字环境">
       <Space size={24} orientation="vertical" style={{ width: "100%" }}>
         <Form form={form} layout="inline" onFinish={getData}>
           <Form.Item name="deviceId" label="设备名称">
