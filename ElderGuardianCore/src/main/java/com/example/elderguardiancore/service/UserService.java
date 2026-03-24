@@ -415,8 +415,10 @@ public class UserService implements IUserService {
             return ResponseMessage.error("用户不存在");
         }
         ElderHealthRes res = new ElderHealthRes(user);
-        Device device = user.getRoom().getDevice();
-        res.setRoomDevice(deviceSummaryMapper.toDTO(device));
+        Room room = user.getRoom();
+        if (room != null) {
+            res.setRoomDevice(deviceSummaryMapper.toDTO(room.getDevice()));
+        }
         HealthDevice healthDevice = user.getHealthDevice();
         if (healthDevice != null) {
             res.setHealthDatas(healthDataDao.findByConditions(healthDevice.getDeviceId(), minTime, maxTime));
