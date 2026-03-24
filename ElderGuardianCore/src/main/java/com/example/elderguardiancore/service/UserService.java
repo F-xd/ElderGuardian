@@ -1,11 +1,15 @@
 package com.example.elderguardiancore.service;
 
+import com.example.elderguardiancore.dao.DeviceDao;
+import com.example.elderguardiancore.dao.HealthDataDao;
 import com.example.elderguardiancore.dao.HealthDeviceDao;
 import com.example.elderguardiancore.dao.RoomDao;
 import com.example.elderguardiancore.dao.UserDao;
+import com.example.elderguardiancore.mapper.DeviceSummaryMapper;
 import com.example.elderguardiancore.mapper.UserMapper;
 import com.example.elderguardiancore.pojo.dto.UserDTO;
 import com.example.elderguardiancore.pojo.model.ResponseMessage;
+import com.example.elderguardiancore.pojo.entity.Device;
 import com.example.elderguardiancore.pojo.entity.HealthDevice;
 import com.example.elderguardiancore.pojo.entity.Room;
 import com.example.elderguardiancore.pojo.entity.User;
@@ -13,7 +17,9 @@ import com.example.elderguardiancore.pojo.enums.Gender;
 import com.example.elderguardiancore.pojo.enums.Role;
 import com.example.elderguardiancore.pojo.request.BindCaregiverReq;
 import com.example.elderguardiancore.pojo.request.BindFamilyReq;
+import com.example.elderguardiancore.pojo.request.ElderHealthResReq;
 import com.example.elderguardiancore.pojo.request.PageReq;
+import com.example.elderguardiancore.pojo.response.ElderHealthRes;
 import com.example.elderguardiancore.pojo.response.PageRes;
 import com.example.elderguardiancore.service.interfaces.IUserService;
 import com.example.elderguardiancore.utils.CalculationUtils;
@@ -38,9 +44,15 @@ public class UserService implements IUserService {
     @Autowired
     UserMapper userMapper;
     @Autowired
+    DeviceSummaryMapper deviceSummaryMapper;
+    @Autowired
     RoomDao roomDao;
     @Autowired
     HealthDeviceDao healthDeviceDao;
+    @Autowired
+    DeviceDao deviceDao;
+    @Autowired
+    HealthDataDao healthDataDao;
 
     @Override
     public User addUser(User user) {
@@ -386,5 +398,29 @@ public class UserService implements IUserService {
         user.setCaregiverIds(null);
         user.setElderIds(null);
         return user;
+    }
+
+    @Override
+    public ResponseMessage<ElderHealthRes> getElderHealth(ElderHealthResReq req) {
+        Long userId = req.getUserId();
+        Long minTime = req.getMinTime();
+        Long maxTime = req.getMaxTime();
+        // 验证userId不能为null
+        if (userId == null) {
+            return ResponseMessage.error("用户ID不能为空");
+        }
+
+        User user = userDao.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseMessage.error("用户不存在");
+        }
+        ElderHealthRes res = new ElderHealthRes(user);
+        Device device = user.getRoom().getDevice();
+        res.setRoomDevice(deviceSummaryMapper.toDTO(device));
+        HealthDevice healthDevice = user.getHealthDevice();
+        if (healthDevice != null) {
+            res.setHealthDatas(healthDataDao.findByConditions(healthDevice.getDeviceId(), minTime, maxTime));
+        }
+        return ResponseMessage.success(res);
     }
 }

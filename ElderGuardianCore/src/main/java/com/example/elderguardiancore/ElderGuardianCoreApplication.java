@@ -16,7 +16,7 @@ public class ElderGuardianCoreApplication {
                 System.setProperty(entry.getKey(), entry.getValue());
             }
         });
-        
+
         SpringApplication.run(ElderGuardianCoreApplication.class, args);
     }
 

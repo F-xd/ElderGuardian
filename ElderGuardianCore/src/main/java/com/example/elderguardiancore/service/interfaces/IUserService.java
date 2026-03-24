@@ -5,7 +5,9 @@ import com.example.elderguardiancore.pojo.model.ResponseMessage;
 import com.example.elderguardiancore.pojo.entity.User;
 import com.example.elderguardiancore.pojo.request.BindCaregiverReq;
 import com.example.elderguardiancore.pojo.request.BindFamilyReq;
+import com.example.elderguardiancore.pojo.request.ElderHealthResReq;
 import com.example.elderguardiancore.pojo.request.PageReq;
+import com.example.elderguardiancore.pojo.response.ElderHealthRes;
 import com.example.elderguardiancore.pojo.response.PageRes;
 
 import java.util.List;
@@ -113,4 +115,12 @@ public interface IUserService {
      * @return 响应消息
      */
     ResponseMessage<String> bindCaregiver(BindCaregiverReq req);
+
+    /**
+     * 获取老人所有健康数据
+     * 
+     * @param req 包含用户ID的请求对象
+     * @return 健康数据响应对象
+     */
+    ResponseMessage<ElderHealthRes> getElderHealth(ElderHealthResReq req);
 }

@@ -8,7 +8,9 @@ import com.example.elderguardiancore.pojo.request.BindCaregiverReq;
 import com.example.elderguardiancore.pojo.request.BindFamilyReq;
 import com.example.elderguardiancore.pojo.request.ChangePasswordReq;
 import com.example.elderguardiancore.pojo.request.DeleteBatchReq;
+import com.example.elderguardiancore.pojo.request.ElderHealthResReq;
 import com.example.elderguardiancore.pojo.request.PageReq;
+import com.example.elderguardiancore.pojo.response.ElderHealthRes;
 import com.example.elderguardiancore.pojo.response.LoginRes;
 import com.example.elderguardiancore.pojo.response.PageRes;
 import com.example.elderguardiancore.service.interfaces.IUserService;
@@ -176,5 +178,11 @@ public class UserController {
     @PostMapping("/bindCaregiver")
     public ResponseMessage<String> bindCaregiver(@RequestBody BindCaregiverReq req) {
         return userService.bindCaregiver(req);
+    }
+
+    // 获取老人所有健康数据
+    @PostMapping("/health")
+    public ResponseMessage<ElderHealthRes> getElderHealth(@RequestBody ElderHealthResReq req) {
+        return userService.getElderHealth(req);
     }
 }
