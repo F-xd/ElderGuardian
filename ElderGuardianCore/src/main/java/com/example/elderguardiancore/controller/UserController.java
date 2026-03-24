@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,9 @@ public class UserController {
         if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
             user.setAvatar("/upload/avatar/default.png");
         }
+        user.setFamilyIds(new HashSet<>());
+        user.setCaregiverIds(new HashSet<>());
+        user.setElderIds(new HashSet<>());
         User addedUser = userService.addUser(user, true);
         return ResponseMessage.success(addedUser, "注册成功");
     }
