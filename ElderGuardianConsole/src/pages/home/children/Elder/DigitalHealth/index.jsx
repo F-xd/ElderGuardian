@@ -1,43 +1,50 @@
 import React, { useEffect, useState } from "react";
 import Content from "@/component/Content";
-import { Form, Space, Flex, Card, Statistic, Divider, Select } from "antd";
-import DeviceSelect from "@/component/DeviceSelect";
+import { Form, Space, Flex, Card, Divider } from "antd";
 import { apiGetElderHealth } from "@/services/userApi";
 import ReactECharts from "echarts-for-react";
-// import { buildOptions, initOptions } from "./constant";
+import { buildOptions, initOptions } from "./constant";
 import CustomDatePicker from "@/component/CustomDatePicker";
 import { ROLE } from "@/constant";
 import UserSelect from "@/component/UserSelect";
+import DataStatistics from "./components/DataStatistics";
 
 export default function DigitalHealth() {
   const [form] = Form.useForm();
-  // const [options, setOptions] = useState({
-  //   temperatureHumidityOptions: initOptions,
-  //   gasConcentrationOptions: initOptions,
-  // });
-  // const [statistics, setStatistics] = useState({
-  //   temperature: { avg: "0", max: "0", min: "0" },
-  //   humidity: { avg: "0", max: "0", min: "0" },
-  //   gasConcentration: { avg: "0", max: "0", min: "0" },
-  // });
+  const [options, setOptions] = useState({
+    heartRateOptions: initOptions,
+    spo2Options: initOptions,
+  });
+  const [userInfo, setUserInfo] = useState(null);
+  const [currentHealth, setCurrentHealth] = useState(null);
+  const [roomDevice, setRoomDevice] = useState(null);
 
   const getData = async () => {
     const values = form.getFieldsValue();
     const [minTime, maxTime] = values.timeRange || [];
-    const {
-      data: { content },
-    } = await apiGetElderHealth({
+    const { data } = await apiGetElderHealth({
       ...values,
       minTime: minTime ? minTime.valueOf() : undefined,
       maxTime: maxTime ? maxTime.valueOf() : undefined,
     });
-    // const { temperatureHumidityOptions, gasConcentrationOptions, statistics } =
-    //   buildOptions(content);
-    // setOptions({
-    //   temperatureHumidityOptions,
-    //   gasConcentrationOptions,
-    // });
-    // setStatistics(statistics);
+
+    if (data) {
+      const { heartRateOptions, spo2Options } = buildOptions(data.healthDatas);
+      setOptions({
+        heartRateOptions,
+        spo2Options,
+      });
+      setUserInfo({
+        userName: data.userName,
+        gender: data.gender,
+        birthday: data.birthday,
+        room: data.room,
+        phone: data.phone,
+        avatar: data.avatar,
+      });
+      setCurrentHealth(data.healthDevice);
+      setRoomDevice(data.roomDevice);
+    }
   };
 
   useEffect(() => {
@@ -50,25 +57,29 @@ export default function DigitalHealth() {
       <Space size={24} orientation="vertical" style={{ width: "100%" }}>
         <Form form={form} layout="inline" onFinish={getData}>
           <Form.Item name="userId" label="老人">
-            <UserSelect role={ROLE.ELDER} onChange={getData} />
+            <UserSelect role={ROLE.ELDER} onChange={getData} showFirst />
           </Form.Item>
           <Form.Item name="timeRange" label="时间范围">
             <CustomDatePicker onChange={getData} allowClear={false} />
           </Form.Item>
         </Form>
         <Card>
-          {/* <DataStatistics statistics={statistics} />
+          <DataStatistics
+            currentHealth={currentHealth}
+            userInfo={userInfo}
+            roomDevice={roomDevice}
+          />
           <Divider />
           <Flex wrap justify="center">
             <ReactECharts
               style={{ width: "50%", minWidth: "400px", height: "300px" }}
-              option={options.temperatureHumidityOptions}
+              option={options.heartRateOptions}
             />
             <ReactECharts
               style={{ width: "50%", minWidth: "400px", height: "300px" }}
-              option={options.gasConcentrationOptions}
+              option={options.spo2Options}
             />
-          </Flex> */}
+          </Flex>
         </Card>
       </Space>
     </Content>

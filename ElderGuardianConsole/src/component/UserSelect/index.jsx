@@ -6,7 +6,7 @@ import UserSelectTable from "@/component/UserSelectTable";
 import useModal from "@/hooks/useModal";
 
 export default function UserSelect(props) {
-  const { role, onChange, value } = props;
+  const { role, onChange, value, showFirst = false } = props;
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [open, onOpen, onClose] = useModal();
@@ -18,9 +18,14 @@ export default function UserSelect(props) {
         condition: { role },
       });
       setUsers(res?.data?.content || []);
+      if (showFirst && res?.data?.content.length > 0) {
+        onChange(res?.data?.content[0].userId);
+        setSelectedUser(res?.data?.content[0]);
+      }
     };
     getData();
-  }, [role]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -30,7 +35,6 @@ export default function UserSelect(props) {
           setSelectedUser(users.find((user) => user.userId === key));
           onChange(key);
         }}
-        allowClear={true}
         options={users.map((user) => ({
           value: user.userId,
           label: (
@@ -51,9 +55,10 @@ export default function UserSelect(props) {
             type="primary"
             size="small"
           >
-            表
+            选择用户
           </Button>
         }
+        {...props}
       />
       {open && (
         <UserSelectTable

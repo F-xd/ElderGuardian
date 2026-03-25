@@ -407,7 +407,7 @@ public class UserService implements IUserService {
         Long maxTime = req.getMaxTime();
         // 验证userId不能为null
         if (userId == null) {
-            return ResponseMessage.error("用户ID不能为空");
+            return ResponseMessage.success(null);
         }
 
         User user = userDao.findById(userId).orElse(null);
