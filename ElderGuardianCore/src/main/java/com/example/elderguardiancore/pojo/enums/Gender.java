@@ -1,6 +1,5 @@
 package com.example.elderguardiancore.pojo.enums;
 
-import com.example.elderguardiancore.utils.EnumUtils;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -29,11 +28,16 @@ public enum Gender implements ICodeEnum {
 
     @JsonCreator
     public static Gender fromGenderId(Object input) {
-        return EnumUtils.fromValue(input, Gender.class, Gender::getGenderId);
+        return ICodeEnum.fromValue(input, Gender.class, Gender::getGenderId);
     }
 
     @Override
     public int getId() {
         return genderId;
+    }
+
+    @Override
+    public String getName() {
+        return genderName;
     }
 }

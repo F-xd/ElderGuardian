@@ -24,6 +24,7 @@ import Device from "../pages/home/children/Device";
 import DigitalEnvironment from "../pages/home/children/Room/DigitalEnvironment";
 import DigitalHealth from "../pages/home/children/Elder/DigitalHealth";
 import ElderList from "../pages/home/children/Elder/ElderList";
+import IntelligentAlarm from "../pages/home/children/Elder/IntelligentAlarm";
 
 export const publicMenuRoutes = [
   {
@@ -88,6 +89,12 @@ export const publicMenuRoutes = [
         key: "digitalHealth",
         path: "digitalHealth",
         element: <DigitalHealth />,
+      },
+      {
+        label: <NavLink to="/home/elder/intelligentAlarm">智能警报</NavLink>,
+        key: "intelligentAlarm",
+        path: "intelligentAlarm",
+        element: <IntelligentAlarm />,
       },
     ],
   },

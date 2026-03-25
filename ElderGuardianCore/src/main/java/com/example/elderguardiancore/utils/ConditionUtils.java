@@ -2,10 +2,10 @@
  * 处理查询条件工具类
  */
 package com.example.elderguardiancore.utils;
+
 import com.example.elderguardiancore.pojo.enums.ICodeEnum;
 import java.time.LocalDate;
 import java.util.Map;
-
 
 public class ConditionUtils {
     private Map<String, Object> condition;
@@ -30,14 +30,14 @@ public class ConditionUtils {
         return value.toString();
     }
 
-    public Long getLong(String key){
+    public Long getLong(String key) {
         Object value = condition.get(key);
-        if(value == null){
+        if (value == null) {
             return null;
         }
-        try{
+        try {
             return Long.parseLong(value.toString());
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             return null;
         }
     }
@@ -58,6 +58,7 @@ public class ConditionUtils {
         }
         return null;
     }
+
     public <E extends Enum<E> & ICodeEnum> E getEnum(String key, Class<E> enumClass) {
         Object value = condition.get(key);
         if (value == null) {
@@ -65,11 +66,11 @@ public class ConditionUtils {
         }
 
         if (value instanceof Integer) {
-            return EnumUtils.getEnumFromId(enumClass, (Integer) value);
+            return ICodeEnum.getEnumFromId(enumClass, (Integer) value);
         } else if (value instanceof String) {
             try {
                 int code = Integer.parseInt((String) value);
-                return EnumUtils.getEnumFromId(enumClass, code);
+                return ICodeEnum.getEnumFromId(enumClass, code);
             } catch (NumberFormatException e) {
                 return null;
             }

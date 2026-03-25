@@ -14,7 +14,9 @@ import com.example.elderguardiancore.pojo.model.ResponseMessage;
 import com.example.elderguardiancore.pojo.request.PageReq;
 import com.example.elderguardiancore.pojo.response.PageRes;
 import com.example.elderguardiancore.service.interfaces.IHealthDeviceService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/healthDevice")
 public class HealthDeviceController {

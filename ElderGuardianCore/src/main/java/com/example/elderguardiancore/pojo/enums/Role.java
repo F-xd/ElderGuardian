@@ -1,14 +1,13 @@
 package com.example.elderguardiancore.pojo.enums;
 
-import com.example.elderguardiancore.utils.EnumUtils;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum Role implements ICodeEnum{
+public enum Role implements ICodeEnum {
     ELDER(0, "老人"),
     FAMILY(1, "家属"),
-    CAREGIVER(2,"护理人员"),
+    CAREGIVER(2, "护理人员"),
     ADMIN(3, "管理员");
 
     private final int roleId;
@@ -29,11 +28,16 @@ public enum Role implements ICodeEnum{
 
     @JsonCreator
     public static Role fromRoleId(Object input) {
-        return EnumUtils.fromValue(input, Role.class, Role::getRoleId);
+        return ICodeEnum.fromValue(input, Role.class, Role::getRoleId);
     }
 
     @Override
     public int getId() {
         return roleId;
+    }
+
+    @Override
+    public String getName() {
+        return roleName;
     }
 }
