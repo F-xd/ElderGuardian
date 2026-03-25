@@ -59,8 +59,8 @@ public class Alarm {
     private User handleUser;
 
     // 报警时间（时间戳）
-    @Column(name = "trigger_time")
-    private Long triggerTime;
+    @Column(name = "alarm_time")
+    private Long alarmTime;
 
     public Long getId() {
         return id;
@@ -150,12 +150,12 @@ public class Alarm {
         this.handleUser = handleUser;
     }
 
-    public Long getTriggerTime() {
-        return triggerTime;
+    public Long getAlarmTime() {
+        return alarmTime;
     }
 
-    public void setTriggerTime(Long triggerTime) {
-        this.triggerTime = triggerTime;
+    public void setAlarmTime(Long alarmTime) {
+        this.alarmTime = alarmTime;
     }
 
     @Override
@@ -172,7 +172,7 @@ public class Alarm {
                 ", handleReason='" + handleReason + '\'' +
                 ", handleTime=" + handleTime +
                 ", handleUser=" + handleUser +
-                ", triggerTime=" + triggerTime +
+                ", triggerTime=" + alarmTime +
                 '}';
     }
 }
