@@ -3,7 +3,6 @@ package com.example.elderguardiancore.service;
 import com.example.elderguardiancore.dao.AlarmDao;
 import com.example.elderguardiancore.dao.DeviceDao;
 import com.example.elderguardiancore.dao.EnvironmentSensorDao;
-import com.example.elderguardiancore.dao.RoomDao;
 import com.example.elderguardiancore.pojo.entity.Alarm;
 import com.example.elderguardiancore.pojo.entity.Device;
 import com.example.elderguardiancore.pojo.entity.EnvironmentData;

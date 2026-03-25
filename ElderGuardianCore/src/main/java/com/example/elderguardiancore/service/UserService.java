@@ -9,7 +9,6 @@ import com.example.elderguardiancore.mapper.DeviceSummaryMapper;
 import com.example.elderguardiancore.mapper.UserMapper;
 import com.example.elderguardiancore.pojo.dto.UserDTO;
 import com.example.elderguardiancore.pojo.model.ResponseMessage;
-import com.example.elderguardiancore.pojo.entity.Device;
 import com.example.elderguardiancore.pojo.entity.HealthDevice;
 import com.example.elderguardiancore.pojo.entity.Room;
 import com.example.elderguardiancore.pojo.entity.User;

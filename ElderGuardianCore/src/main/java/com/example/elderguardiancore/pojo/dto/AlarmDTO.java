@@ -2,14 +2,9 @@ package com.example.elderguardiancore.pojo.dto;
 
 import com.example.elderguardiancore.pojo.entity.EnvironmentData;
 import com.example.elderguardiancore.pojo.entity.HealthData;
-import com.example.elderguardiancore.pojo.entity.Room;
 import com.example.elderguardiancore.pojo.enums.AlarmEvent;
 import com.example.elderguardiancore.pojo.enums.AlarmStatus;
 import com.example.elderguardiancore.pojo.enums.AlarmType;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 public class AlarmDTO {
     // 主键ID
@@ -46,14 +41,14 @@ public class AlarmDTO {
     private UserSummaryDTO handleUser;
 
     // 报警时间（时间戳）
-    private Long triggerTime;
+    private Long alarmTime;
 
     public AlarmDTO() {
     }
 
     public AlarmDTO(Long id, AlarmType alarmType, AlarmEvent alarmEvent, RoomSummaryDTO room, UserSummaryDTO elder,
             EnvironmentData environmentData, HealthData healthData, AlarmStatus alarmStatus, String handleReason,
-            Long handleTime, UserSummaryDTO handleUser, Long triggerTime) {
+            Long handleTime, UserSummaryDTO handleUser, Long alarmTime) {
         this.id = id;
         this.alarmType = alarmType;
         this.alarmEvent = alarmEvent;
@@ -65,7 +60,7 @@ public class AlarmDTO {
         this.handleReason = handleReason;
         this.handleTime = handleTime;
         this.handleUser = handleUser;
-        this.triggerTime = triggerTime;
+        this.alarmTime = alarmTime;
     }
 
     public Long getId() {
@@ -156,12 +151,12 @@ public class AlarmDTO {
         this.handleUser = handleUser;
     }
 
-    public Long getTriggerTime() {
-        return triggerTime;
+    public Long getAlarmTime() {
+        return alarmTime;
     }
 
-    public void setTriggerTime(Long triggerTime) {
-        this.triggerTime = triggerTime;
+    public void setAlarmTime(Long alarmTime) {
+        this.alarmTime = alarmTime;
     }
 
 }

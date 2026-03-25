@@ -7,7 +7,6 @@ import com.example.elderguardiancore.pojo.request.PageReq;
 import com.example.elderguardiancore.pojo.request.RoomCheckInReq;
 import com.example.elderguardiancore.pojo.response.PageRes;
 
-import java.util.List;
 import java.util.Map;
 
 public interface IRoomService {

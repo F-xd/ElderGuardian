@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.elderguardiancore.dao.HealthDeviceDao;
 import com.example.elderguardiancore.mapper.HealthDeviceMapper;
-import com.example.elderguardiancore.pojo.dto.DeviceDTO;
 import com.example.elderguardiancore.pojo.dto.HealthDeviceDTO;
-import com.example.elderguardiancore.pojo.entity.Device;
 import com.example.elderguardiancore.pojo.entity.HealthDevice;
 import com.example.elderguardiancore.pojo.model.ResponseMessage;
 import com.example.elderguardiancore.pojo.request.PageReq;
