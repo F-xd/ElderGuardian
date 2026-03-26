@@ -43,7 +43,7 @@ export default function ProTable(props) {
         order: item.defaultSortOrder,
       })),
   );
-
+  const [isLoading, setIsLoading] = useState(false);
   // 处理排序参数
   const processSortParams = (sortParams) => {
     if (!sortParams) return [];
@@ -72,6 +72,7 @@ export default function ProTable(props) {
   };
 
   const getData = async (isResetPage = false, sortParams = sorter) => {
+    setIsLoading(true);
     if (!api) return;
     const newPage = isResetPage
       ? {
@@ -100,6 +101,7 @@ export default function ProTable(props) {
       totalPages: totalPages,
     });
     setData(afterSearch ? afterSearch(content) : content);
+    setIsLoading(false);
   };
   // 挂载方法到form，方便在其他地方调用
   form.getData = getData;
@@ -176,6 +178,7 @@ export default function ProTable(props) {
           />
         ) : (
           <Table
+            loading={isLoading}
             columns={columns}
             dataSource={data}
             rowKey={rowKey}

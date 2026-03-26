@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -45,5 +46,11 @@ public class AlarmController {
     @PostMapping("/deleteBatch")
     public ResponseMessage<AlarmDTO> deleteBatchAlarm(@RequestBody Map<String, List<Long>> request) {
         return alarmService.deleteBatchAlarm(request.get("ids"));
+    }
+
+    // 查询所有未处理的报警
+    @GetMapping("/unhandled")
+    public ResponseMessage<List<AlarmDTO>> getUnhandledAlarmList() {
+        return alarmService.getUnhandledAlarmList();
     }
 }

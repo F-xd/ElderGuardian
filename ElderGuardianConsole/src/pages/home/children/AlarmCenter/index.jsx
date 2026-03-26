@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getAlarmList,
   apiAlarmDelete,
@@ -11,6 +11,7 @@ import { getColumns } from "./constant";
 import useModal from "@/hooks/useModal";
 import AlarmHandleModal from "./component/AlarmHandleModal";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router";
 export default function AlarmCenter() {
   const [form] = Form.useForm();
   const [visible, onOpen, onClose] = useModal();
@@ -18,9 +19,25 @@ export default function AlarmCenter() {
   const [isEdit, setIsEdit] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const { confirm } = Modal;
+  const { search } = useLocation();
+  useEffect(() => {
+    const searchObj = {};
+    search
+      .replace("?", "")
+      .split("&")
+      .forEach((item) => {
+        const [key, value] = item.split("=");
+        searchObj[key] = value;
+      });
+    form.setFieldsValue(searchObj);
+    form.getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
   // 搜索前处理
   const handleBeforeSearch = (values) => {
-    return values;
+    return {
+      ...values,
+    };
   };
   // 查看告警详情
   const onDetail = (record) => {

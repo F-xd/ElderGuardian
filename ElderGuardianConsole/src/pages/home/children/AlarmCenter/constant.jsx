@@ -3,10 +3,18 @@ import AlarmTypeSelect, { AlarmTypeTag } from "@/component/AlarmTypeSelect";
 import AlarmStatusSelect, {
   AlarmStatusTag,
 } from "@/component/AlarmStatusSelect";
-import { Button, Space } from "antd";
+import { Button, InputNumber, Space } from "antd";
 // 表格列配置
 export const getColumns = (onDetail, onHandle, onDelete) => {
   return [
+    {
+      title: "警报ID",
+      dataIndex: "id",
+      key: "id",
+      formItemProps: {
+        render: () => <InputNumber min={0} />,
+      },
+    },
     {
       title: "警报类型",
       dataIndex: "alarmType",

@@ -40,11 +40,13 @@ public class AlarmService implements IAlarmService {
         AlarmType alarmType = conditionUtils.getEnum("alarmType", AlarmType.class);
         AlarmEvent alarmEvent = conditionUtils.getEnum("alarmEvent", AlarmEvent.class);
         AlarmStatus alarmStatus = conditionUtils.getEnum("alarmStatus", AlarmStatus.class);
+        Long id = conditionUtils.getLong("id");
         // 调用 dao 层方法进行条件查询
         Page<Alarm> alarms = alarmDao.findByConditions(
                 alarmType,
                 alarmEvent,
                 alarmStatus,
+                id,
                 pageable);
         List<AlarmDTO> alarmDTOS = alarmMapper.toDTOList(alarms.getContent());
         PageRes<AlarmDTO> pageRes = new PageRes<>(alarms, alarmDTOS);
@@ -103,5 +105,12 @@ public class AlarmService implements IAlarmService {
         }
         alarmDao.deleteAllById(ids);
         return ResponseMessage.success(null, "批量删除成功");
+    }
+
+    @Override
+    public ResponseMessage<List<AlarmDTO>> getUnhandledAlarmList() {
+        List<Alarm> alarms = alarmDao.findByAlarmStatus(AlarmStatus.UNPROCESSED);
+        List<AlarmDTO> alarmDTOS = alarmMapper.toDTOList(alarms);
+        return ResponseMessage.success(alarmDTOS);
     }
 }

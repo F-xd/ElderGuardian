@@ -40,4 +40,11 @@ public interface IAlarmService {
      * @return 批量删除结果
      */
     ResponseMessage<AlarmDTO> deleteBatchAlarm(List<Long> ids);
+
+    /**
+     * 查询所有未处理的报警
+     * 
+     * @return 未处理报警列表
+     */
+    ResponseMessage<List<AlarmDTO>> getUnhandledAlarmList();
 }
