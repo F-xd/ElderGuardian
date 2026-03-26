@@ -1,5 +1,7 @@
 package com.example.elderguardiancore.service.interfaces;
 
+import java.util.List;
+
 import com.example.elderguardiancore.pojo.dto.AlarmDTO;
 import com.example.elderguardiancore.pojo.entity.Alarm;
 import com.example.elderguardiancore.pojo.model.ResponseMessage;
@@ -22,4 +24,20 @@ public interface IAlarmService {
      * @return 处理结果
      */
     ResponseMessage<String> handleAlarm(Alarm alarm, Long handleUserId);
+
+    /**
+     * 删除智能警报
+     * 
+     * @param id 智能警报ID
+     * @return 删除结果
+     */
+    ResponseMessage<String> deleteAlarm(Long id);
+
+    /**
+     * 批量删除智能警报
+     * 
+     * @param ids 智能警报ID列表
+     * @return 批量删除结果
+     */
+    ResponseMessage<AlarmDTO> deleteBatchAlarm(List<Long> ids);
 }

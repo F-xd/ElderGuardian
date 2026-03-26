@@ -77,4 +77,31 @@ public class AlarmService implements IAlarmService {
         return ResponseMessage.success(null, "处理成功");
     }
 
+    @Override
+    public ResponseMessage<String> deleteAlarm(Long id) {
+        if (id == null) {
+            return ResponseMessage.error("删除ID不能为空");
+        }
+        Alarm existingAlarm = alarmDao.findById(id).orElse(null);
+        if (existingAlarm == null) {
+            return ResponseMessage.error("警报信息不存在");
+        }
+        alarmDao.deleteById(id);
+        return ResponseMessage.success(null, "删除成功");
+    }
+
+    @Override
+    public ResponseMessage<AlarmDTO> deleteBatchAlarm(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return ResponseMessage.error("删除ID列表不能为空");
+        }
+        for (Long id : ids) {
+            boolean existing = alarmDao.existsById(id);
+            if (!existing) {
+                return ResponseMessage.error("存在警报信息不存在");
+            }
+        }
+        alarmDao.deleteAllById(ids);
+        return ResponseMessage.success(null, "批量删除成功");
+    }
 }

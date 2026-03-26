@@ -1,5 +1,8 @@
 package com.example.elderguardiancore.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,5 +35,15 @@ public class AlarmController {
     public ResponseMessage<String> handleAlarm(@RequestBody Alarm alarm, @RequestHeader("Authorization") String token) {
         Long userId = JWTUtils.getUserFromToken(token).getUserId();
         return alarmService.handleAlarm(alarm, userId);
+    }
+
+    @PostMapping("/delete")
+    public ResponseMessage<String> deleteAlarm(@RequestBody Map<String, Long> request) {
+        return alarmService.deleteAlarm(request.get("id"));
+    }
+
+    @PostMapping("/deleteBatch")
+    public ResponseMessage<AlarmDTO> deleteBatchAlarm(@RequestBody Map<String, List<Long>> request) {
+        return alarmService.deleteBatchAlarm(request.get("ids"));
     }
 }

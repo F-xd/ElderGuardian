@@ -4,3 +4,10 @@ export const getAlarmList = (params) => post("/alarm/list", params);
 
 // 处理警报
 export const handleAlarm = (params) => post("/alarm/handle", params);
+
+// 删除警报
+export const apiAlarmDelete = (params) => post("/alarm/delete", params);
+
+// 批量删除警报
+export const apiAlarmDeleteBatch = (params) =>
+  post("/alarm/deleteBatch", params);
