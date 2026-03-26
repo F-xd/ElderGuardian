@@ -9,6 +9,7 @@ import {
   UserOutlined,
   UsergroupAddOutlined,
 } from "@ant-design/icons";
+import { MyIcon } from "../component/Icons";
 import Error from "../pages/error";
 import Login from "../pages/login";
 import LayOut from "../pages/home";
@@ -24,7 +25,7 @@ import Device from "../pages/home/children/Device";
 import DigitalEnvironment from "../pages/home/children/Room/DigitalEnvironment";
 import DigitalHealth from "../pages/home/children/Elder/DigitalHealth";
 import ElderList from "../pages/home/children/Elder/ElderList";
-import IntelligentAlarm from "../pages/home/children/Elder/IntelligentAlarm";
+import AlarmCenter from "../pages/home/children/AlarmCenter";
 
 export const publicMenuRoutes = [
   {
@@ -36,11 +37,18 @@ export const publicMenuRoutes = [
   },
   {
     label: <NavLink to="/home/device">设备中心</NavLink>,
-    key: "device",
     icon: <AlertOutlined />,
+    key: "device",
     path: "device",
     permission: ["admin"],
     element: <Device />,
+  },
+  {
+    label: <NavLink to="/home/AlarmCenter">告警中心</NavLink>,
+    icon: <MyIcon type="icon-jinggao" color="#ffffffff" fontSize={24} />,
+    key: "AlarmCenter",
+    path: "AlarmCenter",
+    element: <AlarmCenter />,
   },
   {
     label: "房间管理",
@@ -89,12 +97,6 @@ export const publicMenuRoutes = [
         key: "digitalHealth",
         path: "digitalHealth",
         element: <DigitalHealth />,
-      },
-      {
-        label: <NavLink to="/home/elder/intelligentAlarm">智能警报</NavLink>,
-        key: "intelligentAlarm",
-        path: "intelligentAlarm",
-        element: <IntelligentAlarm />,
       },
     ],
   },

@@ -73,7 +73,7 @@ public class UserController {
     // 查询用户
     @GetMapping("/get")
     public ResponseMessage<UserDTO> getUser(@RequestHeader("Authorization") String token) {
-        User user = JWTUtils.getUserFromToken(token);
+        UserDTO user = JWTUtils.getUserFromToken(token);
 
         User queryUser = userService.getUser(user.getUserId(), true);
         // 校验用户是否存在
@@ -102,7 +102,7 @@ public class UserController {
     public ResponseMessage<String> changePassword(@Validated @RequestBody ChangePasswordReq changePasswordReq,
             @RequestHeader("Authorization") String token) {
         // 获取用户信息
-        User user = JWTUtils.getUserFromToken(token);
+        UserDTO user = JWTUtils.getUserFromToken(token);
         User queryUser = userService.getUserByPhone(user.getPhone());
 
         // 校验旧密码是否正确
