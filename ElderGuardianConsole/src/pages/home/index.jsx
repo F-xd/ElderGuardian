@@ -27,7 +27,7 @@ const App = () => {
       routes,
       currentPath,
       parentPath = "",
-      result = []
+      result = [],
     ) => {
       for (const route of routes) {
         const routePath = parentPath
@@ -61,7 +61,7 @@ const App = () => {
                   </>
                 ),
               },
-            ]
+            ],
           );
           if (childResult) {
             return childResult;
@@ -76,7 +76,7 @@ const App = () => {
       ? [{ title: "首页", href: "/home" }, ...breadcrumbs]
       : [{ title: "首页", href: "/home" }];
   }, [pathname, menuItems]);
-
+  const defaultSelectedPath = pathname.split("/");
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -90,7 +90,8 @@ const App = () => {
         <Logo isHideTitle={collapsed} />
         <Menu
           theme="dark"
-          defaultSelectedKeys={["options"]}
+          defaultSelectedKeys={[defaultSelectedPath.pop()]}
+          defaultOpenKeys={[defaultSelectedPath.pop()]}
           mode="inline"
           items={menuItems}
         />
