@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import Content from "@/component/Content";
 import ProTable from "@/component/ProTable";
-import { Form, Flex, Tag } from "antd";
+import { Form } from "antd";
 import { apiRoomList } from "@/services/roomApi";
 import { getColumns } from "./constant";
 import RoomCard from "./component/RoomCard";
 import UserSelectTable from "@/component/UserSelectTable";
 import useModal from "@/hooks/useModal";
-import { COLORS, GAP } from "@/constant";
 import RoomNumberTag from "@/component/RoomNumberTag";
 import { apiRoomCheckIn } from "@/services/roomApi";
 import { ROLE } from "../../../../../constant";
@@ -37,7 +36,12 @@ export default function RoomOccupancy() {
     handleClose(true);
   };
 
-  const { roomNumber, maxCapacity, users = [] } = currentRoom || {};
+  const {
+    roomNumber,
+    maxCapacity,
+    currentCount,
+    users = [],
+  } = currentRoom || {};
 
   const title = (
     <>为房间 {<RoomNumberTag roomNumber={roomNumber || ""} />} 选择入住用户</>
@@ -72,7 +76,7 @@ export default function RoomOccupancy() {
           visible={userSelectVisible}
           onClose={handleClose}
           title={title}
-          max={maxCapacity}
+          max={maxCapacity - currentCount + users.length}
           selectedUsers={users}
           role={ROLE.ELDER}
           onConfirm={handleConfirm}

@@ -36,7 +36,7 @@ export default function UserSelectTable({
   };
 
   const handleChooseIn = (keys) => {
-    if (max && keys.length > max) {
+    if (max !== undefined && keys.length > max) {
       message.warning(`最多只能选择${max}人`);
       return;
     }
@@ -49,7 +49,7 @@ export default function UserSelectTable({
         title={
           <Flex gap={GAP.SMALL} style={{ paddingBottom: GAP.MEDIUM }}>
             {title}
-            {max ? (
+            {max != undefined ? (
               <Tag color={COLORS.PRIMARY}>
                 {selectedRowKeys.length}/{max}
               </Tag>

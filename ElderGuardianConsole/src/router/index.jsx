@@ -74,7 +74,7 @@ export const publicMenuRoutes = [
         key: "roomOccupancy",
         path: "roomOccupancy",
         element: <RoomOccupancy />,
-        permission: ["admin"],
+        permission: ["admin", "caregiver"],
       },
     ],
   },

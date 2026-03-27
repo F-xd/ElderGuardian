@@ -104,7 +104,11 @@ export const getColumns = (onDetail, onHandle, onDelete) => {
       formItemProps: {
         render: false,
       },
-      width: 220,
+      width: WithPermission({
+        permission: ["admin"],
+        children: "220px",
+        fallback: "150px",
+      }),
       render: (_, record) => (
         <Space>
           <Button type="primary" onClick={() => onDetail(record)}>
