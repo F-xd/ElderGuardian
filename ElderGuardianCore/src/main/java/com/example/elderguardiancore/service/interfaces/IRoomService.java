@@ -50,8 +50,9 @@ public interface IRoomService {
      * 房间入住（添加用户到房间）
      *
      * @param roomCheckInReq 房间入住请求对象
+     * @param token          认证令牌
      */
-    ResponseMessage<String> checkIn(RoomCheckInReq roomCheckInReq);
+    ResponseMessage<String> checkIn(RoomCheckInReq roomCheckInReq, String token);
 
     /**
      * 批量修改房间容量

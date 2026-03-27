@@ -6,6 +6,7 @@ import com.example.elderguardiancore.dao.UserDao;
 import com.example.elderguardiancore.mapper.RoomMapper;
 import com.example.elderguardiancore.pojo.dto.RoomDTO;
 import com.example.elderguardiancore.pojo.dto.UserDTO;
+import com.example.elderguardiancore.pojo.dto.UserSummaryDTO;
 import com.example.elderguardiancore.pojo.entity.Device;
 import com.example.elderguardiancore.pojo.entity.Room;
 import com.example.elderguardiancore.pojo.entity.User;
@@ -119,26 +120,34 @@ public class RoomService implements IRoomService {
         Set<Long> roomIds = new HashSet<>();
         UserDTO currentUser = JWTUtils.getUserFromToken(token);
         boolean isAdmin = currentUser.getRole() == Role.ADMIN;
-        if (!isAdmin) {
-            User currentUserEntity = userDao.findById(currentUser.getUserId()).orElse(null);
-            if (currentUserEntity != null) {
-                Set<Long> userIds = currentUserEntity.getElderIds();
-                if (userIds != null && !userIds.isEmpty()) {
-                    List<User> users = (List<User>) userDao.findAllById(userIds);
-                    for (User user : users) {
-                        if (user != null && user.getRoom() != null && user.getRoom().getDevice() != null) {
-                            roomIds.add(user.getRoom().getRoomId());
-                        }
+        boolean isCaregiver = currentUser.getRole() == Role.CAREGIVER;
+        User currentUserEntity = userDao.findById(currentUser.getUserId()).orElse(null);
+        if (!isAdmin && !isCaregiver && currentUserEntity != null) {
+            Set<Long> userIds = currentUserEntity.getElderIds();
+            if (userIds != null && !userIds.isEmpty()) {
+                List<User> users = (List<User>) userDao.findAllById(userIds);
+                for (User user : users) {
+                    if (user != null && user.getRoom() != null && user.getRoom().getDevice() != null) {
+                        roomIds.add(user.getRoom().getRoomId());
                     }
                 }
             }
         }
         // 调用 dao 层方法进行条件查询
         Page<Room> rooms = roomDao.findByConditions(
-                !isAdmin ? roomIds : null,
+                !isAdmin && !isCaregiver ? roomIds : null,
                 roomNumber,
                 pageable);
-        PageRes<RoomDTO> pageRes = new PageRes<>(rooms, roomMapper.toDTOList(rooms.getContent()));
+        List<RoomDTO> roomDTOs = roomMapper.toDTOList(rooms.getContent());
+        // 如果是护理员，过滤出当前负责的房间的用户
+        if (isCaregiver) {
+            Set<Long> userIds = currentUserEntity.getElderIds();
+            for (RoomDTO roomDTO : roomDTOs) {
+                List<UserSummaryDTO> users = roomDTO.getUsers();
+                roomDTO.setUsers(users.stream().filter(user -> userIds.contains(user.getUserId())).toList());
+            }
+        }
+        PageRes<RoomDTO> pageRes = new PageRes<>(rooms, roomDTOs);
         return ResponseMessage.success(pageRes);
     }
 
@@ -194,7 +203,7 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public ResponseMessage<String> checkIn(RoomCheckInReq roomCheckInReq) {
+    public ResponseMessage<String> checkIn(RoomCheckInReq roomCheckInReq, String token) {
         Long roomId = roomCheckInReq.getRoomId();
         List<Long> userIds = roomCheckInReq.getUserIds();
 
@@ -209,10 +218,35 @@ public class RoomService implements IRoomService {
             return ResponseMessage.error("房间不存在");
         }
 
+        User currentUser = userDao.findById(JWTUtils.getUserFromToken(token).getUserId()).orElse(null);
+        Set<Long> elderIds = new HashSet<>();
+        boolean isAdmin = currentUser.getRole() == Role.ADMIN;
+        if (currentUser != null) {
+            elderIds = currentUser.getElderIds();
+        }
+
+        // 清除房间用户关联
+        List<User> currentUsers = room.getUsers();
+        Integer oldCount = room.getCurrentCount();
+        if (currentUsers != null && !currentUsers.isEmpty()) {
+            for (User user : currentUsers) {
+                if (isAdmin) {
+                    user.setRoom(null);
+                    oldCount--;
+                } else {
+                    if (elderIds.contains(user.getUserId())) {
+                        user.setRoom(null);
+                        oldCount--;
+                    }
+                }
+                userDao.save(user);
+            }
+        }
         // 检查房间容量是否足够
         Integer maxCapacity = room.getMaxCapacity();
-        if (maxCapacity != null && userIds.size() > maxCapacity) {
-            return ResponseMessage.error("房间容量不足，最大容量：" + maxCapacity + ", 尝试入住人数：" + userIds.size());
+        if (maxCapacity != null && userIds.size() + oldCount > maxCapacity) {
+            return ResponseMessage
+                    .error("房间容量不足，最大容量：" + maxCapacity + ", 尝试入住人数：" + userIds.size() + oldCount);
         }
 
         // 检查用户
@@ -227,15 +261,6 @@ public class RoomService implements IRoomService {
             }
         }
 
-        // 清除房间当前所有用户关联
-        List<User> currentUsers = room.getUsers();
-        if (currentUsers != null && !currentUsers.isEmpty()) {
-            for (User user : currentUsers) {
-                user.setRoom(null);
-                userDao.save(user);
-            }
-        }
-
         // 分配新用户到房间
         for (Long userId : userIds) {
             User user = userDao.findById(userId).orElse(null);
@@ -244,15 +269,16 @@ public class RoomService implements IRoomService {
         }
 
         // 更新房间当前人数
-        room.setCurrentCount(userIds.size());
+        room.setCurrentCount(userIds.size() + oldCount);
 
         // 计算入住率
-        Double occupancyRate = CalculationUtils.calculateOccupancyRate(userIds.size(), room.getMaxCapacity());
+        Double occupancyRate = CalculationUtils.calculateOccupancyRate(userIds.size() + oldCount,
+                room.getMaxCapacity());
         room.setOccupancyRate(occupancyRate);
 
         roomDao.save(room);
 
-        return ResponseMessage.success(null, "房间分配成功，共分配 " + userIds.size() + " 名用户");
+        return ResponseMessage.success(null, "房间分配成功，新分配了 " + userIds.size() + " 名用户");
     }
 
     @Override

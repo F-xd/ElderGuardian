@@ -51,8 +51,9 @@ public class RoomController {
 
     // 房间入住（添加用户到房间）
     @PostMapping("/checkIn")
-    public ResponseMessage<String> checkIn(@RequestBody RoomCheckInReq roomCheckInReq) {
-        return roomService.checkIn(roomCheckInReq);
+    public ResponseMessage<String> checkIn(@RequestBody RoomCheckInReq roomCheckInReq,
+            @RequestHeader("Authorization") String token) {
+        return roomService.checkIn(roomCheckInReq, token);
     }
 
     // 批量修改房间容量
