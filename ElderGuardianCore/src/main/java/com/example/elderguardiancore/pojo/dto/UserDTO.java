@@ -170,4 +170,13 @@ public class UserDTO {
     public void setElderIds(Set<Long> elderIds) {
         this.elderIds = elderIds;
     }
+
+    @Override
+    public String toString() {
+        return "UserDTO [userId=" + userId + ", userName=" + userName + ", phone=" + phone + ", role=" + role
+                + ", avatar=" + avatar + ", gender=" + gender + ", birthday=" + birthday + ", room=" + room
+                + ", healthDevice=" + healthDevice + ", familyIds=" + familyIds + ", caregiverIds=" + caregiverIds
+                + ", elderIds=" + elderIds + "]";
+    }
+
 }

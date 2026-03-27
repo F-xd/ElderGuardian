@@ -23,6 +23,7 @@ import com.example.elderguardiancore.pojo.response.PageRes;
 import com.example.elderguardiancore.service.interfaces.IUserService;
 import com.example.elderguardiancore.utils.CalculationUtils;
 import com.example.elderguardiancore.utils.ConditionUtils;
+import com.example.elderguardiancore.utils.JWTUtils;
 import com.example.elderguardiancore.utils.PageableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -88,7 +89,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public ResponseMessage<PageRes<UserDTO>> getUserList(PageReq pageReq) {
+    public ResponseMessage<PageRes<UserDTO>> getUserList(PageReq pageReq, String token) {
         // 从请求参数中提取条件
         ConditionUtils conditionUtils = new ConditionUtils(pageReq.getCondition());
         // 构建查询条件
@@ -101,6 +102,15 @@ public class UserService implements IUserService {
 
         // 创建Pageable对象
         Pageable pageable = PageableUtils.createPageable(pageReq);
+        // 非管理员角色，获取其管辖的老人ID
+        Set<Long> userIds = null;
+        UserDTO currentUser = JWTUtils.getUserFromToken(token);
+        System.out.println(currentUser);
+        if (currentUser.getRole() != Role.ADMIN) {
+            // 非管理员角色，只返回当前用户自己管辖的老人
+            userIds = userDao.findById(currentUser.getUserId()).orElse(null).getElderIds();
+        }
+
         // 调用 dao 层方法进行条件查询
         Page<User> users = userDao.findByConditions(
                 userName,
@@ -109,9 +119,9 @@ public class UserService implements IUserService {
                 role,
                 minBirthday,
                 maxBirthday,
+                userIds,
                 pageable);
         List<UserDTO> userDTOList = userMapper.toUserDTOList(users.getContent());
-
         PageRes<UserDTO> pageRes = new PageRes<>(users, userDTOList);
         return ResponseMessage.success(pageRes);
     }

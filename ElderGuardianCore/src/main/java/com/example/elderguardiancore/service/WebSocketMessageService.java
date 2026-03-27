@@ -2,7 +2,6 @@ package com.example.elderguardiancore.service;
 
 import com.example.elderguardiancore.dao.UserDao;
 import com.example.elderguardiancore.mapper.AlarmMapper;
-import com.example.elderguardiancore.pojo.dto.AlarmDTO;
 import com.example.elderguardiancore.pojo.entity.Alarm;
 import com.example.elderguardiancore.pojo.entity.Room;
 import com.example.elderguardiancore.pojo.entity.User;

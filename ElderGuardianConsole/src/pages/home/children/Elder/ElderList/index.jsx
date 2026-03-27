@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { apiGetUserList } from "@/services/userApi";
 import ProTable from "@/component/ProTable";
 import Content from "@/component/Content";
@@ -21,6 +22,7 @@ export default function ElderList() {
   const [currentUserRecord, setCurrentUserRecord] = useState();
   const [form] = Form.useForm();
   const [visible, setVisible] = useState("");
+  const user = useSelector((state) => state.user);
   const onClose = () => {
     setVisible("");
   };
@@ -94,7 +96,7 @@ export default function ElderList() {
         form={form}
         api={apiGetUserList}
         beforeSearch={handleBeforeSearch}
-        columns={getColumns(handleOptionClick)}
+        columns={getColumns(handleOptionClick, user)}
       />
       {visible === BIND_OPTION.deviceBind && (
         <Modal

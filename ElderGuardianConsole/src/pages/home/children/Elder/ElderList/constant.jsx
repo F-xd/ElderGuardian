@@ -6,8 +6,11 @@ import GenderTag from "../../../../../component/GenderTag";
 import RoomNumberTag from "../../../../../component/RoomNumberTag";
 import { GAP } from "../../../../../constant";
 import DeviceNameTag from "../../../../../component/DeviceNameTag";
+import WithPermission from "../../../../../component/WithPermission";
+import { hasPermission } from "../../../../../utils/permission";
 const { RangePicker } = DatePicker;
-export const getColumns = (handleOptionClick) => [
+
+export const getColumns = (handleOptionClick, user) => [
   {
     title: "头像",
     dataIndex: "avatar",
@@ -83,13 +86,13 @@ export const getColumns = (handleOptionClick) => [
       />
     ),
   },
-  {
+  hasPermission(user.role?.roleId, ["admin"]) && {
     title: "绑定操作",
     key: "operation",
     width: 350,
     render: (_, record) => {
       return (
-        <Flex gap={GAP.SMALL}>
+        <Flex gap={GAP.SMALL} wrap>
           <Button
             type="primary"
             onClick={() => handleOptionClick("deviceBind", record)}

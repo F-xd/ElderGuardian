@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface UserDao extends CrudRepository<User, Long> {
@@ -21,7 +22,8 @@ public interface UserDao extends CrudRepository<User, Long> {
                         "(:gender IS NULL OR u.gender = :gender) AND " +
                         "(:role IS NULL OR u.role = :role) AND " +
                         "(:minBirthday IS NULL OR u.birthday >= :minBirthday) AND " +
-                        "(:maxBirthday IS NULL OR u.birthday <= :maxBirthday)")
+                        "(:maxBirthday IS NULL OR u.birthday <= :maxBirthday) AND " +
+                        "(:userIds IS NULL OR u.userId IN :userIds)")
         Page<User> findByConditions(
                         @Param("userName") String userName,
                         @Param("phone") String phone,
@@ -29,6 +31,7 @@ public interface UserDao extends CrudRepository<User, Long> {
                         @Param("role") Role role,
                         @Param("minBirthday") LocalDate minBirthday,
                         @Param("maxBirthday") LocalDate maxBirthday,
+                        @Param("userIds") Set<Long> userIds,
                         Pageable pageable);
 
         /**

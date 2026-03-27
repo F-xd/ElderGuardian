@@ -53,7 +53,7 @@ public interface IUserService {
      * 
      * @return 用户列表
      */
-    ResponseMessage<PageRes<UserDTO>> getUserList(PageReq pageReq);
+    ResponseMessage<PageRes<UserDTO>> getUserList(PageReq pageReq, String token);
 
     /**
      * 修改用户

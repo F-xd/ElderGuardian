@@ -98,8 +98,9 @@ public class UserController {
 
     // 查询用户列表
     @PostMapping("/list")
-    public ResponseMessage<PageRes<UserDTO>> getUserList(@RequestBody PageReq pageReq) {
-        return userService.getUserList(pageReq);
+    public ResponseMessage<PageRes<UserDTO>> getUserList(@RequestBody PageReq pageReq,
+            @RequestHeader("Authorization") String token) {
+        return userService.getUserList(pageReq, token);
     }
 
     // 通过ids查询用户列表

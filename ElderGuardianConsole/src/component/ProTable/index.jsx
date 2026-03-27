@@ -12,6 +12,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import styles from "./index.module.less";
+import _ from "lodash";
 
 export default function ProTable(props) {
   const {
@@ -36,7 +37,7 @@ export default function ProTable(props) {
     totalPages: 0,
   });
   const [sorter, setSorter] = useState(
-    columns
+    _.compact(columns)
       .filter((item) => item.defaultSortOrder)
       .map((item) => ({
         field: item?.dataIndex || item?.key,
@@ -127,7 +128,7 @@ export default function ProTable(props) {
         form={form}
       >
         <Flex wrap gap={16}>
-          {(columns || [])
+          {(_.compact(columns) || [])
             .filter(
               (item) => item.formItemProps?.render !== false && item.dataIndex,
             )
@@ -166,7 +167,7 @@ export default function ProTable(props) {
             items={data}
             itemRender={(item) => (
               <Card key={item[rowKey]}>
-                {columns.map((col) => (
+                {_.compact(columns).map((col) => (
                   <div key={col.dataIndex}>
                     {col.title}: {item[col.dataIndex]}
                   </div>
@@ -179,7 +180,7 @@ export default function ProTable(props) {
         ) : (
           <Table
             loading={isLoading}
-            columns={columns}
+            columns={_.compact(columns)}
             dataSource={data}
             rowKey={rowKey}
             rowSelection={rowSelection}

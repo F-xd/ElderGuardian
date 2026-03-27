@@ -17,6 +17,13 @@ public interface ICodeEnum {
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("ID必须是数字或数字字符串");
             }
+        } else if (input instanceof java.util.Map) {
+            // 处理对象形式的输入，从map中提取id
+            java.util.Map<?, ?> map = (java.util.Map<?, ?>) input;
+            Object idObj = map.get("id");
+            if (idObj != null) {
+                return fromValue(idObj, enumClass, idExtractor);
+            }
         }
 
         for (T enumValue : enumClass.getEnumConstants()) {

@@ -48,7 +48,6 @@ export const publicMenuRoutes = [
     icon: <MyIcon type="icon-jinggao" color="#ffffffff" fontSize={24} />,
     key: "AlarmCenter",
     path: "AlarmCenter",
-    permission: ["admin", "caregiver", "family"],
     element: <AlarmCenter />,
   },
   {
@@ -56,7 +55,7 @@ export const publicMenuRoutes = [
     key: "room",
     icon: <HomeOutlined />,
     path: "room",
-    permission: ["admin"],
+    permission: ["admin", "caregiver", "family"],
     children: [
       {
         label: <NavLink to="/home/room/roomList">房间列表</NavLink>,
@@ -69,13 +68,13 @@ export const publicMenuRoutes = [
         key: "digitalEnvironment",
         path: "digitalEnvironment",
         element: <DigitalEnvironment />,
-        permission: ["admin"],
       },
       {
         label: <NavLink to="/home/room/roomOccupancy">入住管理</NavLink>,
         key: "roomOccupancy",
         path: "roomOccupancy",
         element: <RoomOccupancy />,
+        permission: ["admin"],
       },
     ],
   },
@@ -91,7 +90,6 @@ export const publicMenuRoutes = [
         key: "elderList",
         path: "elderList",
         element: <ElderList />,
-        permission: ["admin"],
       },
       {
         label: <NavLink to="/home/elder/digitalHealth">数字健康</NavLink>,
