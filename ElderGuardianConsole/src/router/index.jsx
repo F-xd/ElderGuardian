@@ -48,6 +48,7 @@ export const publicMenuRoutes = [
     icon: <MyIcon type="icon-jinggao" color="#ffffffff" fontSize={24} />,
     key: "AlarmCenter",
     path: "AlarmCenter",
+    permission: ["admin", "caregiver", "family"],
     element: <AlarmCenter />,
   },
   {

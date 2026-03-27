@@ -15,7 +15,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import { publicMenuRoutes } from "../../router";
 import Logo from "../../component/Logo";
 import { useSelector } from "react-redux";
-import { DownOutlined } from "@ant-design/icons";
+import { DownOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../../utils/request";
 import { logout } from "../../utils/utils";
 import { filterRoutesByRole } from "../../utils/permission";
@@ -132,7 +132,7 @@ const App = () => {
                   <AlarmEventTag
                     alarmEvent={item.alarmEvent}
                     alarm={item}
-                    closeIcon
+                    closeIcon={<CloseCircleOutlined />}
                     onClick={() => navigate(`/home/AlarmCenter?id=${item.id}`)}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = "scale(1.05)";
@@ -208,14 +208,12 @@ const App = () => {
               },
             }}
           >
-            <NavLink>
-              <Space>
-                <span>欢迎 {user.userName} 登录</span>
-                <DownOutlined />
-                <RoleTag role={user.role} />
-                <Avatar src={BASE_URL + user.avatar} />
-              </Space>
-            </NavLink>
+            <Space>
+              <span>欢迎 {user.userName} 登录</span>
+              <DownOutlined />
+              <RoleTag role={user.role} />
+              <Avatar src={BASE_URL + user.avatar} />
+            </Space>
           </Dropdown>
         </Header>
         <Content className={styles.content}>

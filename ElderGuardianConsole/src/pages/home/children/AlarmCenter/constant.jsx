@@ -4,6 +4,7 @@ import AlarmStatusSelect, {
   AlarmStatusTag,
 } from "@/component/AlarmStatusSelect";
 import { Button, InputNumber, Space } from "antd";
+import WithPermission from "../../../../component/WithPermission";
 // 表格列配置
 export const getColumns = (onDetail, onHandle, onDelete) => {
   return [
@@ -109,12 +110,16 @@ export const getColumns = (onDetail, onHandle, onDelete) => {
           <Button type="primary" onClick={() => onDetail(record)}>
             查看
           </Button>
-          <Button type="primary" onClick={() => onHandle(record)}>
-            处理
-          </Button>
-          <Button type="primary" danger onClick={() => onDelete(record)}>
-            删除
-          </Button>
+          <WithPermission permission={["admin", "caregiver"]}>
+            <Button type="primary" onClick={() => onHandle(record)}>
+              处理
+            </Button>
+          </WithPermission>
+          <WithPermission permission={["admin"]}>
+            <Button type="primary" danger onClick={() => onDelete(record)}>
+              删除
+            </Button>
+          </WithPermission>
         </Space>
       ),
     },

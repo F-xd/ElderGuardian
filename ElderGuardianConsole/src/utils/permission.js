@@ -17,13 +17,16 @@ export const hasPermission = (role, permission) => {
 
   const userPermissions = ROLE_PERMISSION[role];
 
-  // 如果permission是数组，检查用户是否有任一权限
+  // 如果permission是数组，检查用户是否有任一权限。如果数组为空，返回true。
   if (Array.isArray(permission)) {
+    if (permission.length === 0) {
+      return true;
+    }
     return permission.some((perm) => userPermissions.includes(perm));
   }
 
-  // 如果permission是字符串，直接检查
-  return userPermissions.includes(permission);
+  // 如果permission是字符串，直接检查(空字符串表示不需要权限)
+  return permission == "" ? true : userPermissions.includes(permission);
 };
 
 /**
