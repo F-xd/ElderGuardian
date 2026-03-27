@@ -30,7 +30,7 @@ import AlarmCenter from "../pages/home/children/AlarmCenter";
 export const publicMenuRoutes = [
   {
     label: <NavLink to="">首页</NavLink>,
-    key: "options",
+    key: "home",
     icon: <PieChartOutlined />,
     path: "",
     element: <Options />,
