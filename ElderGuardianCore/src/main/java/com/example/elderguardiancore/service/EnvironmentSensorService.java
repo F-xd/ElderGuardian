@@ -28,6 +28,8 @@ public class EnvironmentSensorService implements IEnvironmentSensorService {
     private AlarmDao alarmDao;
     @Autowired
     private DeviceDao deviceDao;
+    @Autowired
+    private WebSocketMessageService webSocketMessageService;
 
     public void saveEnvironmentAlarm(AlarmEvent alarmEvent, EnvironmentData environmentData) {
         Device device = deviceDao.findById(environmentData.getDeviceId()).orElse(null); // 这里需要根据实际情况获取房间
@@ -50,6 +52,7 @@ public class EnvironmentSensorService implements IEnvironmentSensorService {
             newAlarm.setAlarmTime(environmentData.getTime());
             newAlarm.setEnvironmentData(environmentData);
             alarmDao.save(newAlarm);
+            webSocketMessageService.sendAlarmToRelatedUser(newAlarm);
         } else {
             // 如果存在未处理的相同类型警报，则更新警报数据
             existingAlarm.setEnvironmentData(environmentData);

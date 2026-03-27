@@ -23,6 +23,8 @@ public class HealthDataService implements IHealthDataService {
     private AlarmDao alarmDao;
     @Autowired
     private HealthDeviceDao healthDeviceDao;
+    @Autowired
+    private WebSocketMessageService webSocketMessageService;
 
     public void saveHealthAlarm(AlarmEvent alarmEvent, HealthData healthData) {
         HealthDevice healthDevice = healthDeviceDao.findById(healthData.getDeviceId()).orElse(null);
@@ -45,6 +47,8 @@ public class HealthDataService implements IHealthDataService {
             newAlarm.setAlarmTime(healthData.getTime());
             newAlarm.setHealthData(healthData);
             alarmDao.save(newAlarm);
+            webSocketMessageService.sendAlarmToRelatedUser(newAlarm);
+            ;
         } else {
             // 如果存在未处理的相同类型警报，则更新警报数据
             existingAlarm.setHealthData(healthData);

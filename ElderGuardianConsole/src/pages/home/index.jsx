@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Breadcrumb,
   Layout,
@@ -20,15 +20,13 @@ import { BASE_URL } from "../../utils/request";
 import { logout } from "../../utils/utils";
 import { filterRoutesByRole } from "../../utils/permission";
 import RoleTag from "../../component/RoleTag";
-import { getUnhandledAlarmList } from "../../services/alarmApi";
+import useWebSocket from "../../hooks/useWebSocket";
 const { Header, Content, Footer, Sider } = Layout;
 
 const App = () => {
   const user = useSelector((state) => state.user);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  // 未处理告警列表
-  const unHandleedListRef = useRef([]);
   // 侧边栏是否折叠
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState({
@@ -99,6 +97,41 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  useWebSocket({
+    onMessage: (data) => {
+      api.error({
+        title: "有新的告警",
+        description: (
+          <Space vertical>
+            <span>点击告警进行跳转</span>
+            <Space wrap>
+              <AlarmEventTag
+                alarmEvent={data.alarmEvent}
+                alarm={data}
+                closeIcon={<CloseCircleOutlined />}
+                onClick={() => navigate(`/home/AlarmCenter?id=${data.id}`)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                  e.currentTarget.style.boxShadow =
+                    "0 2px 8px rgba(0, 0, 0, 0.15)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+                style={{
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                }}
+              />
+            </Space>
+          </Space>
+        ),
+        duration: 0,
+      });
+    },
+  });
+
   // 更新选中菜单
   useEffect(() => {
     const updateSelectedMenu = () => {
@@ -113,53 +146,7 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
   // 监听未处理告警列表变化
-  useEffect(() => {
-    const timer = setInterval(async () => {
-      const { data = [] } = await getUnhandledAlarmList();
-      // 比较有新增的告警就弹窗提示
-      const newUnHandleedList = data.filter(
-        (item) =>
-          !unHandleedListRef.current.some((item2) => item2.id === item.id),
-      );
-      if (newUnHandleedList.length > 0) {
-        api.error({
-          title: `有${newUnHandleedList.length}条新的未处理告警`,
-          description: (
-            <Space vertical>
-              <span>点击告警进行跳转</span>
-              <Space wrap>
-                {newUnHandleedList.map((item) => (
-                  <AlarmEventTag
-                    alarmEvent={item.alarmEvent}
-                    alarm={item}
-                    closeIcon={<CloseCircleOutlined />}
-                    onClick={() => navigate(`/home/AlarmCenter?id=${item.id}`)}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "scale(1.05)";
-                      e.currentTarget.style.boxShadow =
-                        "0 2px 8px rgba(0, 0, 0, 0.15)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "scale(1)";
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
-                    style={{
-                      transition: "all 0.3s ease",
-                      cursor: "pointer",
-                    }}
-                  />
-                ))}
-              </Space>
-            </Space>
-          ),
-          duration: 0,
-        });
-      }
-      unHandleedListRef.current = data;
-    }, 5000);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Layout className={styles.layout}>
