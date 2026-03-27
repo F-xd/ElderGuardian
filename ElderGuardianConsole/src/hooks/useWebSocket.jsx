@@ -18,7 +18,6 @@ const useWebSocket = ({ onMessage, onConnect, onDisconnect }) => {
       setIsConnected(true);
       reconnectAttemptsRef.current = 0;
       if (onConnect) onConnect();
-      console.log(user);
       if (user && user.userId) {
         websocket.send(
           JSON.stringify({

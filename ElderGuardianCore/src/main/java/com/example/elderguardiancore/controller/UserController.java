@@ -13,6 +13,7 @@ import com.example.elderguardiancore.pojo.request.PageReq;
 import com.example.elderguardiancore.pojo.response.ElderHealthRes;
 import com.example.elderguardiancore.pojo.response.LoginRes;
 import com.example.elderguardiancore.pojo.response.PageRes;
+import com.example.elderguardiancore.service.WebSocketMessageService;
 import com.example.elderguardiancore.service.interfaces.IUserService;
 import com.example.elderguardiancore.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class UserController {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    WebSocketMessageService webSocketMessageService;
 
     // 增加用户
     @PostMapping("/register")
@@ -63,6 +67,13 @@ public class UserController {
         // 校验密码是否正确
         if (!queryUser.getPassword().equals(user.getPassword())) {
             return ResponseMessage.error("密码错误");
+        }
+        // 发送登录消息到已在线的WebSocket连接
+        if (webSocketMessageService.isUserOnline(queryUser.getUserId())) {
+            Map<String, Object> loginMessage = Map.of(
+                    "type", "logout",
+                    "message", "账号在其他设备登录，当前设备已下线");
+            webSocketMessageService.sendMessageToUser(queryUser.getUserId(), loginMessage);
         }
         // 生成JWT Token
         String token = JWTUtils.createToken(queryUser);

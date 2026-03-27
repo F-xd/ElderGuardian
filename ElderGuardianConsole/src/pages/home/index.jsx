@@ -11,7 +11,7 @@ import {
 } from "antd";
 import { AlarmEventTag } from "../../component/AlarmEventSelect";
 import styles from "./index.module.less";
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router";
+import { NavLink, Outlet, useLocation } from "react-router";
 import { publicMenuRoutes } from "../../router";
 import Logo from "../../component/Logo";
 import { useSelector } from "react-redux";
@@ -26,7 +26,6 @@ const { Header, Content, Footer, Sider } = Layout;
 const App = () => {
   const user = useSelector((state) => state.user);
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   // 侧边栏是否折叠
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState({
@@ -99,17 +98,20 @@ const App = () => {
 
   useWebSocket({
     onMessage: (data) => {
+      console.log(data);
+      if (data.type === "logout") {
+        logout();
+        return;
+      }
       api.error({
         title: "有新的告警",
         description: (
           <Space vertical>
             <span>点击告警进行跳转</span>
-            <Space wrap>
+            <NavLink to={`/home/AlarmCenter?id=${data.id}`}>
               <AlarmEventTag
                 alarmEvent={data.alarmEvent}
                 alarm={data}
-                closeIcon={<CloseCircleOutlined />}
-                onClick={() => navigate(`/home/AlarmCenter?id=${data.id}`)}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "scale(1.05)";
                   e.currentTarget.style.boxShadow =
@@ -124,7 +126,7 @@ const App = () => {
                   cursor: "pointer",
                 }}
               />
-            </Space>
+            </NavLink>
           </Space>
         ),
         duration: 0,
