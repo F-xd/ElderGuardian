@@ -32,8 +32,9 @@ public class RoomController {
 
     // 查询房间列表
     @PostMapping("/list")
-    public ResponseMessage<PageRes<RoomDTO>> getRoomList(@RequestBody PageReq pageReq) {
-        return roomService.getRoomList(pageReq);
+    public ResponseMessage<PageRes<RoomDTO>> getRoomList(@RequestBody PageReq pageReq,
+            @RequestHeader("Authorization") String token) {
+        return roomService.getRoomList(pageReq, token);
     }
 
     // 删除房间

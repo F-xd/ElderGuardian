@@ -4,8 +4,9 @@ import RoomNumberTag from "../../../../../component/RoomNumberTag";
 import DeviceNameTag from "../../../../../component/DeviceNameTag";
 import RateTag from "../../../../../component/RateTag";
 import { COLORS } from "../../../../../constant";
+import { hasPermission } from "../../../../../utils/permission";
 
-export const getColumns = (handleDelete, handleEdit) => [
+export const getColumns = (handleDelete, handleEdit, user) => [
   {
     title: "房间号",
     dataIndex: "roomNumber",
@@ -59,10 +60,10 @@ export const getColumns = (handleDelete, handleEdit) => [
     },
     sorter: { multiple: 4 },
   },
-  {
+  hasPermission(user.role?.roleId, ["admin"]) && {
     title: "操作",
     key: "operation",
-    render: (text, record) => (
+    render: (_, record) => (
       <Space>
         <Button type="primary" danger onClick={() => handleDelete(record)}>
           删除

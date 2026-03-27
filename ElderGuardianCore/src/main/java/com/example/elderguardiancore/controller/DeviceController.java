@@ -22,8 +22,8 @@ public class DeviceController {
     }
 
     @GetMapping("/getAllDevice")
-    public ResponseMessage<List<DeviceDTO>> getAllDevice() {
-        return deviceService.getAllDevice();
+    public ResponseMessage<List<DeviceDTO>> getAllDevice(@RequestHeader("Authorization") String token) {
+        return deviceService.getAllDevice(token);
     }
 
 }

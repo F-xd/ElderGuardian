@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Button, Modal, Input, message } from "antd";
+import { Form, Button, Modal, Input, message, Space } from "antd";
 import ProTable from "@/component/ProTable";
 import Content from "@/component/Content";
 import { getColumns } from "./constant";
@@ -13,6 +13,8 @@ import RoomEditModal from "./component/RoomEditModal";
 import RoomBatchUpdateCapacityModal from "./component/RoomBatchUpdateCapacityModal";
 import useModal from "@/hooks/useModal";
 import RoomNumberTag from "../../../../../component/RoomNumberTag";
+import { useSelector } from "react-redux";
+import WithPermission from "../../../../../component/WithPermission";
 const { confirm } = Modal;
 export default function RoomList() {
   const [form] = Form.useForm();
@@ -20,6 +22,7 @@ export default function RoomList() {
   const [open, onOpen, onClose] = useModal();
   const [batchModalOpen, onBatchModalOpen, onBatchModalClose] = useModal();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const user = useSelector((state) => state.user);
   // 关闭编辑弹窗
   const handleCloseModal = (isGetData = true) => {
     roomEditForm.resetFields();
@@ -41,7 +44,6 @@ export default function RoomList() {
   };
   // 删除房间
   const handleDelete = (record) => {
-    console.log(record);
     confirm({
       title: "提示",
       content: (
@@ -115,27 +117,32 @@ export default function RoomList() {
         form={form}
         api={apiRoomList}
         // beforeSearch={handleBeforeSearch}
-        columns={getColumns(handleDelete, handleEdit)}
-        extraOptions={[
-          <Button type="primary" icon={<PlusOutlined />} onClick={onOpen}>
-            添加
-          </Button>,
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={handleBatchUpdateCapacity}
-          >
-            批量修改容量
-          </Button>,
-          <Button
-            type="primary"
-            icon={<DeleteOutlined />}
-            danger
-            onClick={handleBatchDelete}
-          >
-            批量删除
-          </Button>,
-        ]}
+        columns={getColumns(handleDelete, handleEdit, user)}
+        extraOptions={WithPermission({
+          children: (
+            <Space>
+              <Button type="primary" icon={<PlusOutlined />} onClick={onOpen}>
+                添加
+              </Button>
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+                onClick={handleBatchUpdateCapacity}
+              >
+                批量修改容量
+              </Button>
+              <Button
+                type="primary"
+                icon={<DeleteOutlined />}
+                danger
+                onClick={handleBatchDelete}
+              >
+                批量删除
+              </Button>
+            </Space>
+          ),
+          permission: ["admin"],
+        })}
       />
     </Content>
   );

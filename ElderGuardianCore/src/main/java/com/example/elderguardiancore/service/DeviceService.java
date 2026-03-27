@@ -1,21 +1,29 @@
 package com.example.elderguardiancore.service;
 
 import com.example.elderguardiancore.dao.DeviceDao;
+import com.example.elderguardiancore.dao.UserDao;
 import com.example.elderguardiancore.mapper.DeviceMapper;
 import com.example.elderguardiancore.pojo.dto.DeviceDTO;
+import com.example.elderguardiancore.pojo.dto.UserDTO;
 import com.example.elderguardiancore.pojo.entity.Device;
+import com.example.elderguardiancore.pojo.entity.User;
+import com.example.elderguardiancore.pojo.enums.Role;
 import com.example.elderguardiancore.pojo.model.ResponseMessage;
 import com.example.elderguardiancore.pojo.request.PageReq;
 import com.example.elderguardiancore.pojo.response.PageRes;
 import com.example.elderguardiancore.service.interfaces.IDeviceService;
 import com.example.elderguardiancore.utils.ConditionUtils;
+import com.example.elderguardiancore.utils.JWTUtils;
 import com.example.elderguardiancore.utils.PageableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DeviceService implements IDeviceService {
@@ -23,6 +31,8 @@ public class DeviceService implements IDeviceService {
     private DeviceDao deviceDao;
     @Autowired
     private DeviceMapper deviceMapper;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public Long updateDeviceData(Device device) {
@@ -63,8 +73,25 @@ public class DeviceService implements IDeviceService {
     }
 
     @Override
-    public ResponseMessage<List<DeviceDTO>> getAllDevice() {
-        List<Device> devices = deviceDao.findAll();
+    public ResponseMessage<List<DeviceDTO>> getAllDevice(String token) {
+        UserDTO currentUser = JWTUtils.getUserFromToken(token);
+        List<Device> devices = new ArrayList<>();
+        if (currentUser.getRole() != Role.ADMIN) {
+            User currentUserEntity = userDao.findById(currentUser.getUserId()).orElse(null);
+            if (currentUserEntity != null) {
+                Set<Long> userIds = currentUserEntity.getElderIds();
+                if (userIds != null && !userIds.isEmpty()) {
+                    List<User> users = (List<User>) userDao.findAllById(userIds);
+                    for (User user : users) {
+                        if (user != null && user.getRoom() != null && user.getRoom().getDevice() != null) {
+                            devices.add(user.getRoom().getDevice());
+                        }
+                    }
+                }
+            }
+        } else {
+            devices = deviceDao.findAll();
+        }
         List<DeviceDTO> deviceDTOS = deviceMapper.toDTOList(devices);
         return ResponseMessage.success(deviceDTOS);
     }

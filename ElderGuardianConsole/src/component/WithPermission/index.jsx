@@ -14,6 +14,8 @@ export default function WithPermission({
   permission,
   fallback = null,
 }) {
+  console.log(children);
+  console.log(permission);
   const user = useSelector((state) => state.user);
 
   if (!user || !user.role) {

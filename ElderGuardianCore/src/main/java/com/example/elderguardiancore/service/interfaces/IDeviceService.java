@@ -28,7 +28,9 @@ public interface IDeviceService {
     /**
      * 获取所有设备
      * 
+     * @param token   认证令牌
+     * @param pageReq 分页请求对象
      * @return 所有设备列表
      */
-    ResponseMessage<List<DeviceDTO>> getAllDevice();
+    ResponseMessage<List<DeviceDTO>> getAllDevice(String token);
 }

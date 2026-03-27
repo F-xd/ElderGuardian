@@ -5,9 +5,11 @@ import com.example.elderguardiancore.dao.RoomDao;
 import com.example.elderguardiancore.dao.UserDao;
 import com.example.elderguardiancore.mapper.RoomMapper;
 import com.example.elderguardiancore.pojo.dto.RoomDTO;
+import com.example.elderguardiancore.pojo.dto.UserDTO;
 import com.example.elderguardiancore.pojo.entity.Device;
 import com.example.elderguardiancore.pojo.entity.Room;
 import com.example.elderguardiancore.pojo.entity.User;
+import com.example.elderguardiancore.pojo.enums.Role;
 import com.example.elderguardiancore.pojo.model.ResponseMessage;
 import com.example.elderguardiancore.pojo.request.AddRoomReq;
 import com.example.elderguardiancore.pojo.request.PageReq;
@@ -16,6 +18,8 @@ import com.example.elderguardiancore.pojo.response.PageRes;
 import com.example.elderguardiancore.service.interfaces.IRoomService;
 import com.example.elderguardiancore.utils.CalculationUtils;
 import com.example.elderguardiancore.utils.ConditionUtils;
+import com.example.elderguardiancore.utils.JWTUtils;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,8 +28,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.elderguardiancore.utils.PageableUtils;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class RoomService implements IRoomService {
@@ -103,17 +109,33 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public ResponseMessage<PageRes<RoomDTO>> getRoomList(PageReq pageReq) {
+    public ResponseMessage<PageRes<RoomDTO>> getRoomList(PageReq pageReq, String token) {
         // 从请求参数中提取条件
         ConditionUtils conditionUtils = new ConditionUtils(pageReq.getCondition());
         // 构建查询条件
         String roomNumber = conditionUtils.getString("roomNumber");
-
         // 使用PageableUtils创建Pageable对象
         Pageable pageable = PageableUtils.createPageable(pageReq);
-
+        Set<Long> roomIds = new HashSet<>();
+        UserDTO currentUser = JWTUtils.getUserFromToken(token);
+        boolean isAdmin = currentUser.getRole() == Role.ADMIN;
+        if (!isAdmin) {
+            User currentUserEntity = userDao.findById(currentUser.getUserId()).orElse(null);
+            if (currentUserEntity != null) {
+                Set<Long> userIds = currentUserEntity.getElderIds();
+                if (userIds != null && !userIds.isEmpty()) {
+                    List<User> users = (List<User>) userDao.findAllById(userIds);
+                    for (User user : users) {
+                        if (user != null && user.getRoom() != null && user.getRoom().getDevice() != null) {
+                            roomIds.add(user.getRoom().getRoomId());
+                        }
+                    }
+                }
+            }
+        }
         // 调用 dao 层方法进行条件查询
         Page<Room> rooms = roomDao.findByConditions(
+                !isAdmin ? roomIds : null,
                 roomNumber,
                 pageable);
         PageRes<RoomDTO> pageRes = new PageRes<>(rooms, roomMapper.toDTOList(rooms.getContent()));

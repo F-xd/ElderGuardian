@@ -30,7 +30,7 @@ public interface IRoomService {
      * @param pageReq 分页请求对象
      * @return 房间列表分页响应对象
      */
-    ResponseMessage<PageRes<RoomDTO>> getRoomList(PageReq pageReq);
+    ResponseMessage<PageRes<RoomDTO>> getRoomList(PageReq pageReq, String token);
 
     /**
      * 删除房间
