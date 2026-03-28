@@ -59,7 +59,6 @@ public class PageableUtils {
         List<Sort.Order> orders = sorts.stream()
                 .map(sortDTO -> {
                     // 将数据库列名转换为实体属性名
-                    System.out.println(sortDTO);
                     String property = convertColumnNameToProperty(sortDTO.getField());
                     String direction = sortDTO.getOrder();
 

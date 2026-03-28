@@ -21,7 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -82,11 +82,13 @@ public class DeviceService implements IDeviceService {
                 Set<Long> userIds = currentUserEntity.getElderIds();
                 if (userIds != null && !userIds.isEmpty()) {
                     List<User> users = (List<User>) userDao.findAllById(userIds);
+                    Set<Long> newDeviceIds = new HashSet<>();
                     for (User user : users) {
                         if (user != null && user.getRoom() != null && user.getRoom().getDevice() != null) {
-                            devices.add(user.getRoom().getDevice());
+                            newDeviceIds.add(user.getRoom().getDevice().getDeviceId());
                         }
                     }
+                    devices = deviceDao.findAllById(newDeviceIds);
                 }
             }
         } else {

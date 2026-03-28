@@ -105,7 +105,6 @@ public class UserService implements IUserService {
         // 非管理员角色，获取其管辖的老人ID
         Set<Long> userIds = null;
         UserDTO currentUser = JWTUtils.getUserFromToken(token);
-        System.out.println(currentUser);
         if (currentUser.getRole() != Role.ADMIN) {
             // 非管理员角色，只返回当前用户自己管辖的老人
             userIds = userDao.findById(currentUser.getUserId()).orElse(null).getElderIds();
