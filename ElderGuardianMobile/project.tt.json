@@ -1,0 +1,13 @@
+{
+  "miniprogramRoot": "./",
+  "projectname": "ElderGuardianMobile",
+  "description": "养老院老人健康监测系统",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram"
+}
