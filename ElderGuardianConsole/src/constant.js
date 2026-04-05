@@ -1,3 +1,12 @@
+// 本地开发：192.168.50.219
+// 云服务器：8.137.171.24
+// 域名/IP
+export const DOMAIN = "192.168.50.219";
+// 端口
+export const PORT = "8080";
+// URL
+export const URL = `http://${DOMAIN}:${PORT}`;
+
 // HTTP状态码
 export const HTTP_STATUS = {
   OK: 200,

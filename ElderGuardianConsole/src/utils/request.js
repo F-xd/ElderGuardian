@@ -1,7 +1,8 @@
 import axios from "axios";
 import { ERROR_CODE, HTTP_STATUS } from "../constant";
 import { message } from "antd";
-export const BASE_URL = "http://192.168.50.219:8080";
+import { URL } from "../constant";
+export const BASE_URL = URL;
 
 // 封装axios
 const instance = axios.create({
@@ -28,7 +29,7 @@ instance.interceptors.request.use(
   // 请求失败
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // 响应拦截器
@@ -54,7 +55,7 @@ instance.interceptors.response.use(
   (error) => {
     message.error("网络错误，请稍后重试");
     return Promise.reject(error);
-  }
+  },
 );
 
 export const get = (url, params) => instance.get(url, { params });

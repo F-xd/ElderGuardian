@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
-
+import { PORT, DOMAIN } from "../constant";
 const useWebSocket = ({ onMessage, onConnect, onDisconnect }) => {
   const user = useSelector((state) => state.user);
   const [ws, setWs] = useState(null);
@@ -10,7 +10,7 @@ const useWebSocket = ({ onMessage, onConnect, onDisconnect }) => {
   const maxReconnectAttempts = 5;
 
   const connectWebSocket = () => {
-    const wsUrl = `ws://192.168.50.219:8080/ws`;
+    const wsUrl = `ws://${DOMAIN}:${PORT}/ws`;
     const websocket = new WebSocket(wsUrl);
 
     websocket.onopen = () => {
