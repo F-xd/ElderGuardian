@@ -11,6 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>ElderGuardianCore</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>ElderGuardianCore</name>
     <description>ElderGuardianCore</description>
     <url/>

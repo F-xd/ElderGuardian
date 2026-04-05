@@ -18,7 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("http://192.168.50.219:5173", "http://192.168.50.192:5173/") // 允许所有来源，生产环境建议指定具体域名
+                .allowedOriginPatterns("http://192.168.50.219:5173", "http://8.137.171.24:5173/",
+                        "http://8.137.171.24/") // 允许所有来源，生产环境建议指定具体域名
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true); // 关键：允许携带凭据
