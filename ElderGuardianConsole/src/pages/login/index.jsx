@@ -20,7 +20,7 @@ export default function Login() {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const [pageMode, setPageMode] = useState(() =>
-    pathname === "/register" ? PAGE_MODE.REGISTER : PAGE_MODE.LOGIN
+    pathname === "/register" ? PAGE_MODE.REGISTER : PAGE_MODE.LOGIN,
   );
   const [form] = Form.useForm();
   const isLogin = pageMode === PAGE_MODE.LOGIN;
@@ -215,7 +215,7 @@ export default function Login() {
   return (
     <div className={styles.background}>
       <div>
-        <h1 className={styles.systemTitle}>智慧养老管理系统</h1>
+        <h1 className={styles.systemTitle}>养老院老人健康监测系统</h1>
         <div className={styles.login}>
           <h1 className={styles.title}>
             {pageMode === PAGE_MODE.LOGIN ? "用户登录" : "用户注册"}

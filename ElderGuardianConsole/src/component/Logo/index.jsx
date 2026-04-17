@@ -5,7 +5,7 @@ export default function Logo({ className, isHideTitle = true }) {
   return (
     <div className={className + " " + styles.logo}>
       <img src={logoImg} className={styles.logoImg} />
-      {!isHideTitle && <h1>智慧养老管理系统</h1>}
+      {!isHideTitle && <h1>养老院老人健康监测系统</h1>}
     </div>
   );
 }
