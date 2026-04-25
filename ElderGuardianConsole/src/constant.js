@@ -1,7 +1,7 @@
 // 本地开发：192.168.50.219
 // 云服务器：8.137.171.24
 // 域名/IP
-export const DOMAIN = "192.168.50.219";
+export const DOMAIN = "8.137.171.24";
 // 端口
 export const PORT = "8080";
 // URL

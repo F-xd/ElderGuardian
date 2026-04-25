@@ -33,6 +33,14 @@ public class PageableUtils {
      * @return 包含排序信息的Pageable对象
      */
     public static Pageable createPageable(Integer pageNumber, Integer pageSize, List<SortDTO> sorts) {
+        // 设置默认值
+        if (pageNumber == null || pageNumber < 1) {
+            pageNumber = 1;
+        }
+        if (pageSize == null || pageSize < 1) {
+            pageSize = 10;
+        }
+
         // 创建基本的Pageable对象（无排序）
         if (sorts == null || sorts.isEmpty()) {
             return PageRequest.of(pageNumber - 1, pageSize);
